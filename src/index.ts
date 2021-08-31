@@ -26,6 +26,7 @@ function main() {
             });
 
             game.transition((stage) => {
+                console.log((stage as SplashScreenStage).image, otherSplash.image);
                 return new FadeTransition(stage, otherSplash, 1000);
             }, "replace");
         });

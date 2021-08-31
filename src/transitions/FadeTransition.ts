@@ -11,7 +11,7 @@ export class FadeTransition extends Transition {
         context.globalAlpha = 1.0;
         context.drawImage(fromCanvas, 0, 0);
 
-        context.globalAlpha = 1.0 - progress;
+        context.globalAlpha = progress;
         context.drawImage(toCanvas, 0, 0);
 
         context.globalAlpha = 1.0;
