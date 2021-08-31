@@ -1,4 +1,4 @@
-import { InputEvent } from "./InputEvent";
+import { GameInputEvent } from "./GameInputEvent";
 
 export class Stage {
     /** @param {CanvasRenderingContext2D} context Rendering context. Might belong to an off-screen canvas. */
@@ -6,7 +6,7 @@ export class Stage {
         // do nothing by default
     }
 
-    input(event: InputEvent) {
+    input(event: GameInputEvent) {
         // do nothing by default
     }
 

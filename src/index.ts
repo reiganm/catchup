@@ -1,6 +1,7 @@
 import { elt } from "./util/elt";
 import { Game } from "./engine/Game";
 import { SplashScreenStage } from "./stages/SplashScreenStage";
+import { FadeTransition } from "./transitions/FadeTransition";
 
 function loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
@@ -24,8 +25,9 @@ function main() {
                 game.popFrontStage();
             });
 
-            game.popFrontStage();
-            game.pushStage(otherSplash);
+            game.transition((stage) => {
+                return new FadeTransition(stage, otherSplash, 1000);
+            }, "replace");
         });
 
         game.pushStage(splash);
