@@ -1,11 +1,11 @@
 type InputEventState = "up" | "down" | "press";
 
-export type InputEvent = {
+export type GameInputEvent = {
     key: String,
     state: InputEventState
 }
 
-export function inputEventFromKeyboardEvent(event: KeyboardEvent): InputEvent {
+export function inputEventFromKeyboardEvent(event: KeyboardEvent): GameInputEvent {
     let state: InputEventState = null;
     switch (event.type) {
         case "keydown":

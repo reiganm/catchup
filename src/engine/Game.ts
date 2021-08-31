@@ -1,5 +1,5 @@
 import { Stage } from "./Stage";
-import { inputEventFromKeyboardEvent } from "./InputEvent";
+import { inputEventFromKeyboardEvent } from "./GameInputEvent";
 
 export class Game {
     canvas: HTMLCanvasElement
@@ -35,6 +35,14 @@ export class Game {
 
     private getFrontStage(): Stage {
         return this.stages[this.stages.length - 1] ?? null;
+    }
+
+    pushStage(stage: Stage) {
+        this.stages.push(stage);
+    }
+
+    popFrontStage() {
+        this.stages.pop();
     }
 
     run(updateInterval: number) {

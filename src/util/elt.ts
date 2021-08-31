@@ -29,3 +29,15 @@ elt.textNode = function (text: string): Text {
 elt.canvas = function (width: number, height: number): HTMLCanvasElement {
     return elt("canvas", { width, height }) as HTMLCanvasElement;
 }
+
+elt.image = function (
+    src: string,
+    onLoad: (image: HTMLImageElement) => void
+): HTMLImageElement {
+    return elt("img", {
+        src,
+        onload(event) {
+            onLoad(event.target as HTMLImageElement);
+        }
+    }) as HTMLImageElement;
+}

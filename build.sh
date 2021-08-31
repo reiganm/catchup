@@ -2,4 +2,4 @@
 
 ESBUILD=./node_modules/.bin/esbuild
 
-"$ESBUILD" --bundle src/index.ts --outfile=bundle.js
+"$ESBUILD" --bundle src/index.ts --outfile=dist/bundle.js
