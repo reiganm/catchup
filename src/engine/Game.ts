@@ -15,7 +15,7 @@ export class Game {
     }
 
     private listenForInput() {
-        for (const eventName in ["keydown", "keyup", "keypress"]) {
+        for (const eventName of ["keydown", "keyup", "keypress"]) {
             document.addEventListener(eventName, (event) => {
                 this.handleInput(event as KeyboardEvent);
             });
