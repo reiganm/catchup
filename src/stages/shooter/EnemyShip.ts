@@ -1,5 +1,6 @@
 import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
+import { PlayerShip } from "./PlayerShip";
 import { ShooterObject } from "./ShooterObject";
 
 export class EnemyShip extends ShooterObject {
@@ -11,5 +12,10 @@ export class EnemyShip extends ShooterObject {
         this.velocity = new Vector(-200, 0);
 
         this.collisionGroup = "enemy";
+        this.targetCollisionGroup = "player";
+    }
+
+    collideWithObject(object: ShooterObject) {
+        object.destroy();
     }
 }
