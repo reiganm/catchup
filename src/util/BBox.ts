@@ -22,19 +22,23 @@ export class BBox {
     isPointInside(x: number, y: number): boolean {
         return (
             x >= this.minX
-            && x < this.minX + this.width
+            && x < this.maxX
             && y >= this.minY
-            && y < this.minY + this.height
+            && y < this.maxY
         );
     }
 
-    isIntersecting(otherBBox: BBox): boolean {
+    private isInside(otherBBox: BBox): boolean {
         return (
             this.isPointInside(otherBBox.minX, otherBBox.minY)
-            || this.isPointInside(otherBBox.minX + otherBBox.width, otherBBox.minY)
-            || this.isPointInside(otherBBox.minX, otherBBox.minY + otherBBox.height)
-            || this.isPointInside(otherBBox.minX + otherBBox.width, otherBBox.minY + otherBBox.height)
-        )
+            || this.isPointInside(otherBBox.maxX, otherBBox.minY)
+            || this.isPointInside(otherBBox.minX, otherBBox.maxY)
+            || this.isPointInside(otherBBox.maxX, otherBBox.maxY)
+        );
+    }
+    
+    isIntersecting(otherBBox: BBox): boolean {
+        return this.isInside(otherBBox) || otherBBox.isInside(this);
     }
 
     translated(dx: number, dy: number): BBox {

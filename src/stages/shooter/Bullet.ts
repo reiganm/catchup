@@ -9,5 +9,13 @@ export class Bullet extends ShooterObject {
         ));
 
         this.velocity = new Vector(500, 0);
+
+        this.collisionGroup = "playerbullet";
+        this.targetCollisionGroup = "enemy";
+    }
+
+    collideWithObject(object: ShooterObject) {
+        object.destroy();
+        this.destroy();
     }
 }

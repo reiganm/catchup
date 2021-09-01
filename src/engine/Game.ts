@@ -7,6 +7,7 @@ export class Game {
     context: CanvasRenderingContext2D
     stages: Stage[]
     currentTransition: Transition
+    updateInterval: number;
 
     /** Last recorded value of global */
     timer: number
@@ -80,6 +81,7 @@ export class Game {
     run(updateInterval: number) {
         this.listenForInput();
         this.timer = performance.now();
+        this.updateInterval = updateInterval;
 
         setInterval(() => {
             this.update();
@@ -92,7 +94,7 @@ export class Game {
 
     update() {
         const now = performance.now();
-        const dt = now - this.timer;
+        const dt = Math.min(now - this.timer, this.updateInterval);
         this.timer = now;
 
         for (const stage of this.stages) {

@@ -41,6 +41,8 @@ export class PlayerShip extends ShooterObject {
             this.spawner.spawn(bullet);
         });
         this.shootingTimer.isHolding = true;
+
+        this.collisionGroup = "player";
     }
 
     get directionSymbol(): string {

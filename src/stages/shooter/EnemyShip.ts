@@ -9,5 +9,7 @@ export class EnemyShip extends ShooterObject {
         ));
 
         this.velocity = new Vector(-200, 0);
+
+        this.collisionGroup = "enemy";
     }
 }

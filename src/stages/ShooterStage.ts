@@ -54,7 +54,7 @@ export class ShooterStage extends Stage {
             console.warn("attempting to remove non-spawned object:", object);
             return;
         }
-        const [removedObject] = this.objects.splice(index);
+        const [removedObject] = this.objects.splice(index, 1);
         removedObject.spawner = null;
     }
 
@@ -67,31 +67,42 @@ export class ShooterStage extends Stage {
     private forceIntoScreen(object: ShooterObject) {
         const ebbox = object.effectiveBBox;
         if (ebbox.minX < 0) {
-            object.x = -object.bbox.minX;
+            object.x = -object.localBBox.minX;
         }
         if (ebbox.minY < 16) {
-            object.y = -object.bbox.minY + 16;
+            object.y = -object.localBBox.minY + 16;
         }
         if (ebbox.maxX >= this.screenBBox.width) {
-            object.x = this.screenBBox.width - object.bbox.width - object.bbox.minX;
+            object.x = this.screenBBox.width - object.localBBox.width - object.localBBox.minX;
         }
         if (ebbox.maxY >= this.screenBBox.height) {
-            object.y = this.screenBBox.height - object.bbox.height - object.bbox.minY;
+            object.y = this.screenBBox.height - object.localBBox.height - object.localBBox.minY;
         }
     }
 
     update(dt: number) {
         this.enemySpawnTimer.update(dt);
 
-        const deletedObjects: Set<ShooterObject> = new Set();
-        for (const object of this.objects) {
+        for (const object of this.objects.slice()) {
             if (this.shouldRemoveObject(object)) {
-                deletedObjects.add(object);
+                this.removeObject(object);
                 continue;
             }
             object.update(dt);
+
+            if (object.targetCollisionGroup !== null) {
+                const ebbox = object.effectiveBBox;
+                const collidedObjects = this.objects.filter(
+                    x => (
+                        x.collisionGroup == object.targetCollisionGroup
+                        && ebbox.isIntersecting(x.effectiveBBox)
+                    )
+                );
+                for (const collidedObject of collidedObjects) {
+                    object.collideWithObject(collidedObject);
+                }
+            }
         }
-        this.objects = this.objects.filter(x => !deletedObjects.has(x));
 
         this.forceIntoScreen(this.player);
     }
