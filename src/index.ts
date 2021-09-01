@@ -1,6 +1,7 @@
 import { elt } from "./util/elt";
 import { Game } from "./engine/Game";
 import { SplashScreenStage } from "./stages/SplashScreenStage";
+import { ShooterStage } from "./stages/ShooterStage";
 import { FadeTransition } from "./transitions/FadeTransition";
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -21,12 +22,12 @@ function main() {
         loadImage("img/test-splash-2.png"),
     ]).then(([image1, image2]) => {
         const splash = new SplashScreenStage(image1, () => {
-            const otherSplash = new SplashScreenStage(image2, () => {
-                game.popFrontStage();
+            const shooter = new ShooterStage({ 
+                background: image2
             });
 
             game.transition((stage) => {
-                return new FadeTransition(stage, otherSplash, 1000);
+                return new FadeTransition(stage, shooter, 200);
             }, "replace");
         });
 
