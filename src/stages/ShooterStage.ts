@@ -140,8 +140,10 @@ export class ShooterStage extends Stage {
     }
 
     input(event: GameInputEvent) {
-        switch (event.key) {
+        switch (event.key.toLowerCase()) {
             case "w":
+            case "ц":
+            case "arrowup":
                 if (event.state === "down") {
                     this.player.addDirection("w");
                 } else if (event.state === "up") {
@@ -149,6 +151,8 @@ export class ShooterStage extends Stage {
                 }
                 break;
             case "a":
+            case "ф":
+            case "arrowleft":
                 if (event.state === "down") {
                     this.player.addDirection("a");
                 } else if (event.state === "up") {
@@ -156,6 +160,8 @@ export class ShooterStage extends Stage {
                 }
                 break;
             case "s":
+            case "ы":
+            case "arrowdown":
                 if (event.state === "down") {
                     this.player.addDirection("s");
                 } else if (event.state === "up") {
@@ -163,6 +169,8 @@ export class ShooterStage extends Stage {
                 }
                 break;
             case "d":
+            case "в":
+            case "arrowright":
                 if (event.state === "down") {
                     this.player.addDirection("d");
                 } else if (event.state === "up") {
