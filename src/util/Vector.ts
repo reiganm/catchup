@@ -7,6 +7,10 @@ export class Vector {
         this.y = y;
     }
 
+    get isNull(): boolean {
+        return this.x === 0 && this.y === 0;
+    }
+
     get measure(): number {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
@@ -17,6 +21,13 @@ export class Vector {
         return new Vector(
             this.x / measure,
             this.y / measure
+        );
+    }
+
+    scaled(factor: number): Vector {
+        return new Vector(
+            this.x * factor,
+            this.y * factor
         );
     }
 }
