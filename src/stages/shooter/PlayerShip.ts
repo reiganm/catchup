@@ -61,10 +61,12 @@ export class PlayerShip extends ShooterObject {
         if (this.isShooting && this.shootingTimer === 0 ) {
             this.shootingTimer = this.shootingTimerResetValue;
             const box = this.effectiveBBox;
-            this.spawner.spawn(new Bullet(
+            const bullet = new Bullet(
                 box.minX + box.width,
                 box.minY + box.height / 2
-            ));
+            );
+            bullet.velocity = bullet.velocity.adding(this.velocity.scaled(0.1));
+            this.spawner.spawn(bullet);
         }
 
         switch (this.directionSymbol) {

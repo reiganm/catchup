@@ -30,4 +30,11 @@ export class Vector {
             this.y * factor
         );
     }
+
+    adding(otherVector: Vector): Vector {
+        return new Vector(
+            otherVector.x + this.x,
+            otherVector.y + this.y,
+        )
+    }
 }
