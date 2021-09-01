@@ -136,6 +136,7 @@ export class ShooterStage extends Stage {
         this.player.render(context);
 
         context.fillStyle = "white";
+        context.font = "8px amiga4ever"
         context.fillText(`${this.player.directionSymbol}`, 5, 15);
     }
 
