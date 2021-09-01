@@ -3,6 +3,10 @@ import { Stage } from "../engine/Stage";
 import { Vector } from "../util/Vector";
 import { ShooterObject } from "./shooter/ShooterObject";
 import { PlayerShip } from "./shooter/PlayerShip";
+import { EnemyShip } from "./shooter/EnemyShip";
+import { Timer } from "../util/Timer";
+import { randomFromRange } from "../util/random";
+import { BBox } from "../util/BBox";
 
 type ShooterStageConfig = {
     background: HTMLImageElement
@@ -11,6 +15,7 @@ type ShooterStageConfig = {
 export class ShooterStage extends Stage {
     player: PlayerShip;
     objects: ShooterObject[];
+    enemySpawnTimer: Timer;
 
     constructor(config: ShooterStageConfig) {
         super();
@@ -20,6 +25,11 @@ export class ShooterStage extends Stage {
         this.objects = [];
 
         this.addObject(this.player);
+        this.enemySpawnTimer = new Timer(1000, () => {
+            const randomY = randomFromRange(50, 250);
+            const enemy = new EnemyShip(420, randomY);
+            this.addObject(enemy);
+        });
     }
 
     private addObject(object: ShooterObject) {
@@ -45,10 +55,23 @@ export class ShooterStage extends Stage {
         removedObject.spawner = null;
     }
 
+    private shouldRemoveObject(object: ShooterObject): boolean {
+        if (object === this.player) return false;
+        return object.x < -100 || object.x > 400 + 100;
+    }
+
     update(dt: number) {
+        this.enemySpawnTimer.update(dt);
+
+        const deletedObjects: Set<ShooterObject> = new Set();
         for (const object of this.objects) {
+            if (this.shouldRemoveObject(object)) {
+                deletedObjects.add(object);
+                continue;
+            }
             object.update(dt);
         }
+        this.objects = this.objects.filter(x => !deletedObjects.has(x));
     }
 
     render(context: CanvasRenderingContext2D) {
@@ -60,7 +83,7 @@ export class ShooterStage extends Stage {
 
         context.fillStyle = "white";
         context.font = "8px amiga4ever"
-        context.fillText(`${this.player.directionSymbol}`, 5, 15);
+        context.fillText(`${this.player.directionSymbol.padEnd(2, "_")} | ${this.objects.length}`, 5, 15);
     }
 
     input(event: GameInputEvent) {
