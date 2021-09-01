@@ -3,6 +3,7 @@ import { Game } from "./engine/Game";
 import { SplashScreenStage } from "./stages/SplashScreenStage";
 import { ShooterStage } from "./stages/ShooterStage";
 import { FadeTransition } from "./transitions/FadeTransition";
+import { Vector } from "./util/Vector";
 
 function loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
@@ -23,7 +24,8 @@ function main() {
     ]).then(([image1, image2]) => {
         const splash = new SplashScreenStage(image1, () => {
             const shooter = new ShooterStage({ 
-                background: image2
+                background: image2,
+                dimensions: new Vector(400, 300),
             });
 
             game.transition((stage) => {
