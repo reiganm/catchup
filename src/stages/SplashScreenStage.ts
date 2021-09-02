@@ -1,13 +1,14 @@
 import { GameInputEvent } from "../engine/GameInputEvent";
 import { Stage } from "../engine/Stage";
+import { Vector } from "../util/Vector";
 
 export class SplashScreenStage extends Stage {
     image: HTMLImageElement;
     onSkip: () => void;
     isSkipped: boolean;
 
-    constructor(image: HTMLImageElement, onSkip: () => void) {
-        super();
+    constructor(dimensions: Vector, image: HTMLImageElement, onSkip: () => void) {
+        super(dimensions);
         this.image = image;
         this.onSkip = onSkip;
         this.isSkipped = false;

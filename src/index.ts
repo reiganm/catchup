@@ -17,7 +17,7 @@ function main() {
         loadImage("img/test-splash.png"),
         loadImage("img/test-splash-2.png"),
     ]).then(([image1, image2]) => {
-        const splash = new SplashScreenStage(image1, () => {
+        const splash = new SplashScreenStage(screenDimensions, image1, () => {
             // const shooter = new ShooterStage({ 
                 // background: image2,
                 // dimensions: new Vector(400, 300),

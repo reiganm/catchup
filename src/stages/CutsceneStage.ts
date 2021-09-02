@@ -19,8 +19,10 @@ export class CutsceneStage extends Stage {
     currentSceneIndex: number;
     currentDialogueIndex: number;
     currentImage: HTMLImageElement;
+    promptImage: HTMLImageElement;
     onCutsceneFinished: () => void;
     dialogueTimer: Timer;
+    promptTimer: Timer;
 
     constructor(scenes: SceneDefinition[], screenDimensions: Vector) {
         super(screenDimensions);
@@ -29,8 +31,10 @@ export class CutsceneStage extends Stage {
         this.currentSceneIndex = 0;
         this.currentDialogueIndex = 0;
         this.currentImage = null;
+        this.promptImage = elt.image("img/prompt.png", () => {}, () => {});
         this.onCutsceneFinished = null;
         this.dialogueTimer = null;
+        this.promptTimer = new Timer("repeat", 500, () => {});
     }
 
     private get currentScene(): SceneDefinition {
@@ -39,6 +43,10 @@ export class CutsceneStage extends Stage {
 
     private get currentDialogue(): string {
         return this.currentScene?.dialogue[this.currentDialogueIndex] ?? null;
+    }
+
+    private get isDialogueFinished(): boolean {
+        return (this.dialogueTimer?.progress ?? 0) === 1;
     }
 
     private goToNextScene() {
@@ -74,6 +82,7 @@ export class CutsceneStage extends Stage {
         if (this.dialogueTimer !== null) {
             this.dialogueTimer.update(dt);
         }
+        this.promptTimer.update(dt);
     }
 
     private splitLines(
@@ -103,6 +112,7 @@ export class CutsceneStage extends Stage {
     render(context: CanvasRenderingContext2D) {
         context.fillStyle = "black";
         context.fillRect(0, 0, this.screenDimensions.x, this.screenDimensions.y);
+        const dialogueProgress = this.dialogueTimer?.progress ?? 0;
 
         if (this.currentImage !== null) {
             context.drawImage(this.currentImage, 0, 0); 
@@ -111,7 +121,7 @@ export class CutsceneStage extends Stage {
         if (this.currentDialogue !== null) {
             const text = this.currentDialogue.slice(
                 0,
-                Math.floor((this.dialogueTimer?.progress ?? 0) * this.currentDialogue.length)
+                Math.floor(dialogueProgress * this.currentDialogue.length)
             );
 
             context.save();
@@ -129,6 +139,15 @@ export class CutsceneStage extends Stage {
             for (const line of lines) {
                 context.fillText(line, 10, y, maxWidth);
                 y += 18;
+            }
+
+            if (this.isDialogueFinished) {
+                context.globalAlpha = this.promptTimer.progress;
+                context.drawImage(
+                    this.promptImage,
+                    this.screenDimensions.x - 20,
+                    DIALOGUE_HEIGHT - 16
+                );
             }
 
             context.restore();
