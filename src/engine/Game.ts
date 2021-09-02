@@ -48,6 +48,7 @@ export class Game {
         }
 
         this.stages.push(stage);
+        stage.afterPush();
     }
 
     popFrontStage() {

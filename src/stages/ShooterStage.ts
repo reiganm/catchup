@@ -6,7 +6,6 @@ import { PlayerShip } from "./shooter/PlayerShip";
 import { EnemyShip } from "./shooter/EnemyShip";
 import { Timer } from "../util/Timer";
 import { randomFromRange } from "../util/random";
-import { BBox } from "../util/BBox";
 
 type ShooterStageConfig = {
     background: HTMLImageElement,
@@ -17,20 +16,18 @@ export class ShooterStage extends Stage {
     player: PlayerShip;
     objects: ShooterObject[];
     enemySpawnTimer: Timer;
-    screenBBox: BBox;
 
     constructor(config: ShooterStageConfig) {
-        super();
+        super(config.dimensions);
         
         this.player = new PlayerShip();
         this.player.velocity = new Vector(20, 40);
         this.objects = [];
-        this.enemySpawnTimer = new Timer(1000, () => {
+        this.enemySpawnTimer = new Timer("repeat", 1000, () => {
             const randomY = randomFromRange(50, 250);
             const enemy = new EnemyShip(420, randomY);
             this.addObject(enemy);
         });
-        this.screenBBox = new BBox(0, 0, config.dimensions.x, config.dimensions.y);
 
         this.addObject(this.player);
     }
@@ -60,7 +57,7 @@ export class ShooterStage extends Stage {
 
     private shouldRemoveObject(object: ShooterObject): boolean {
         if (object === this.player) return false;
-        return object.x < -100 || object.x > this.screenBBox.width + 100;
+        return object.x < -100 || object.x > this.screenDimensions.x + 100;
     }
 
     /** If object is outside of screen, puts it on the screen's edge  */
@@ -72,11 +69,11 @@ export class ShooterStage extends Stage {
         if (ebbox.minY < 16) {
             object.y = -object.localBBox.minY + 16;
         }
-        if (ebbox.maxX >= this.screenBBox.width) {
-            object.x = this.screenBBox.width - object.localBBox.width - object.localBBox.minX;
+        if (ebbox.maxX >= this.screenDimensions.x) {
+            object.x = this.screenDimensions.x - object.localBBox.width - object.localBBox.minX;
         }
-        if (ebbox.maxY >= this.screenBBox.height) {
-            object.y = this.screenBBox.height - object.localBBox.height - object.localBBox.minY;
+        if (ebbox.maxY >= this.screenDimensions.y) {
+            object.y = this.screenDimensions.y - object.localBBox.height - object.localBBox.minY;
         }
     }
 

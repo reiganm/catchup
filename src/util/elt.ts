@@ -32,12 +32,16 @@ elt.canvas = function (width: number, height: number): HTMLCanvasElement {
 
 elt.image = function (
     src: string,
-    onLoad: (image: HTMLImageElement) => void
+    onLoad: (image: HTMLImageElement) => void,
+    onError: (error: Error) => void
 ): HTMLImageElement {
     return elt("img", {
         src,
         onload(event) {
             onLoad(event.target as HTMLImageElement);
+        },
+        onerror(event) {
+            onError(new Error(`failed to load image from ${src}: ${event}`));
         }
     }) as HTMLImageElement;
 }

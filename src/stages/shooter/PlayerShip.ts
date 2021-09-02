@@ -30,7 +30,7 @@ export class PlayerShip extends ShooterObject {
         this.maximumSpeed = 250;
         this.activeDirections = new Set();
 
-        this.shootingTimer = new Timer(250, () => {
+        this.shootingTimer = new Timer("repeat", 250, () => {
             const box = this.effectiveBBox;
             const bullet = new Bullet(
                 box.minX + box.width,
