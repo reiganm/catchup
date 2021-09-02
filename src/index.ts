@@ -24,13 +24,13 @@ function main() {
             // });
             const shooter = new CutsceneStage([{
                 imageSrc: "img/test-scene-1.png",
-                dialogue: [
+                dialogues: [
                     "hello, hello, this is a test dialogue; ".repeat(5),
                     "meow meow meow",
                 ]
             }, {
                 imageSrc: "img/test-scene-2.png",
-                dialogue: [
+                dialogues: [
                     "this should scroll from left to right",
                     "it looks cool that way",
                     "if it doesn't, you probably need to make it scroll, meow...",

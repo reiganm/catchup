@@ -3,14 +3,18 @@ import { Timer } from "../util/Timer";
 import { Vector } from "../util/Vector";
 import { elt } from "../util/elt";
 import { loadImage } from "../util/loadImage";
+import { Game } from "../engine/Game";
+import { GameInputEvent } from "../engine/GameInputEvent";
 
 type SceneDefinition = {
     imageSrc: string,
-    dialogue: string[]
+    dialogues: string[]
 }
 
 /** Text speed: characters per second */
-const TEXT_SPEED = 30;
+const NORMAL_TEXT_SPEED = 30;
+/** Fast text speed: characters per second */
+const FASTER_TEXT_SPEED = 300;
 
 const DIALOGUE_HEIGHT = 100;
 
@@ -23,6 +27,7 @@ export class CutsceneStage extends Stage {
     onCutsceneFinished: () => void;
     dialogueTimer: Timer;
     promptTimer: Timer;
+    textSpeed: number;
 
     constructor(scenes: SceneDefinition[], screenDimensions: Vector) {
         super(screenDimensions);
@@ -35,6 +40,7 @@ export class CutsceneStage extends Stage {
         this.onCutsceneFinished = null;
         this.dialogueTimer = null;
         this.promptTimer = new Timer("repeat", 500, () => {});
+        this.textSpeed = NORMAL_TEXT_SPEED;
     }
 
     private get currentScene(): SceneDefinition {
@@ -42,7 +48,7 @@ export class CutsceneStage extends Stage {
     }
 
     private get currentDialogue(): string {
-        return this.currentScene?.dialogue[this.currentDialogueIndex] ?? null;
+        return this.currentScene?.dialogues[this.currentDialogueIndex] ?? null;
     }
 
     private get isDialogueFinished(): boolean {
@@ -59,6 +65,14 @@ export class CutsceneStage extends Stage {
         this.currentDialogueIndex = 0;
     }
 
+    private goToNextDialogue() {
+        this.currentDialogueIndex += 1;
+        if (this.currentDialogueIndex >= this.currentScene.dialogues.length) {
+            this.goToNextScene();
+        }
+        this.recreateDialogueTimer();
+    }
+
     private async prepareScene(scene: SceneDefinition) {
         const currentScene = this.currentScene;
 
@@ -68,19 +82,44 @@ export class CutsceneStage extends Stage {
             console.error(error);
         }
 
+        this.recreateDialogueTimer();
+    }
+
+    private recreateDialogueTimer() {
         this.dialogueTimer = new Timer(
             "once",
-            this.currentDialogue.length * 1000 / TEXT_SPEED,
-            () => {
-                // TODO: allow skipping to the next scene
-            }
+            this.currentDialogue.length * 1000 / NORMAL_TEXT_SPEED,
+            () => {}
         );
         this.dialogueTimer.reset();
     }
 
+    private enableFastText() {
+        this.textSpeed = FASTER_TEXT_SPEED;
+    }
+
+
+    private disableFastText() {
+        this.textSpeed = NORMAL_TEXT_SPEED;
+    }
+
+    input(event: GameInputEvent) {
+        if (event.key === " " && event.state === "down") {
+            if (this.isDialogueFinished) {
+                this.goToNextDialogue();
+            }
+
+            this.enableFastText();
+        }
+
+        if (event.key === " " && event.state === "up") {
+            this.disableFastText();
+        }
+    }
+
     update(dt: number) {
         if (this.dialogueTimer !== null) {
-            this.dialogueTimer.update(dt);
+            this.dialogueTimer.update(dt * this.textSpeed / NORMAL_TEXT_SPEED);
         }
         this.promptTimer.update(dt);
     }
