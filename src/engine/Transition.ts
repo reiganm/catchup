@@ -1,4 +1,5 @@
 import { elt } from "../util/elt";
+import { Vector } from "../util/Vector";
 import { Stage } from "./Stage";
 
 export type TransitionType = "replace" | "push";
@@ -16,8 +17,8 @@ export class Transition extends Stage {
      * @param {Stage} toStage Stage to transition to, higher on stack
      * @param {number} number How long the transition should play from start to finish
      */
-    constructor(fromStage: Stage, toStage: Stage, duration: number) {
-        super();
+    constructor(fromStage: Stage, toStage: Stage, duration: number, screenDimensions: Vector) {
+        super(screenDimensions);
         this.fromStage = fromStage;
         this.toStage = toStage;
         this.duration = duration;

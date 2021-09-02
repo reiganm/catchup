@@ -10,7 +10,9 @@ type SceneDefinition = {
 }
 
 /** Text speed: characters per second */
-const TEXT_SPEED = 10;
+const TEXT_SPEED = 30;
+
+const DIALOGUE_HEIGHT = 100;
 
 export class CutsceneStage extends Stage {
     scenes: SceneDefinition[]
@@ -74,7 +76,34 @@ export class CutsceneStage extends Stage {
         }
     }
 
+    private splitLines(
+        text: string,
+        context: CanvasRenderingContext2D,
+        targetWidth: number
+    ): string[] {
+        let result: string[] = [];
+
+        const words = text.split(" ");
+        let line = "";
+
+        for (const word of words) {
+            if (context.measureText(line + word + " ").width < targetWidth) {
+                line += word + " ";
+            } else {
+                result.push(line);
+                line = word + " ";
+            }
+        }
+
+        result.push(line);
+
+        return result;
+    }
+
     render(context: CanvasRenderingContext2D) {
+        context.fillStyle = "black";
+        context.fillRect(0, 0, this.screenDimensions.x, this.screenDimensions.y);
+
         if (this.currentImage !== null) {
             context.drawImage(this.currentImage, 0, 0); 
         }
@@ -84,9 +113,25 @@ export class CutsceneStage extends Stage {
                 0,
                 Math.floor((this.dialogueTimer?.progress ?? 0) * this.currentDialogue.length)
             );
+
+            context.save();
+            context.translate(0, this.screenDimensions.y - DIALOGUE_HEIGHT);
+
+            context.fillStyle = "rgba(0, 0, 0, 50%)";
+            context.fillRect(0, 0, this.screenDimensions.x, DIALOGUE_HEIGHT);
+
             context.fillStyle = "white";
             context.font = "8px amiga4ever";
-            context.fillText(text, 10, 10);
+
+            const maxWidth = this.screenDimensions.x - 20;
+            const lines = this.splitLines(text, context, maxWidth);
+            let y = 14;
+            for (const line of lines) {
+                context.fillText(line, 10, y, maxWidth);
+                y += 18;
+            }
+
+            context.restore();
         }
     }
 

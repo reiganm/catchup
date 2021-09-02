@@ -24,10 +24,11 @@ export class Timer {
         this.currentValue = Math.max(this.currentValue - dt, 0);
         if (!this.isHolding && this.currentValue === 0) {
             this.action();
-            this.currentValue = this.resetValue;
             
             if (this.mode === "once") {
                 this.isSleeping = true;
+            } else {
+                this.currentValue = this.resetValue;
             }
         }
     }

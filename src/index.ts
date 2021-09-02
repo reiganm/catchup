@@ -8,7 +8,8 @@ import { Vector } from "./util/Vector";
 import { loadImage } from "./util/loadImage";
 
 function main() {
-    const canvas = elt.canvas(400, 300);
+    const screenDimensions = new Vector(400, 300);
+    const canvas = elt.canvas(screenDimensions.x, screenDimensions.y);
     document.body.appendChild(canvas);
 
     const game = new Game(canvas);
@@ -24,7 +25,7 @@ function main() {
             const shooter = new CutsceneStage([{
                 imageSrc: "img/test-scene-1.png",
                 dialogue: [
-                    "hello, hello, this is a test dialogue",
+                    "hello, hello, this is a test dialogue; ".repeat(5),
                     "meow meow meow",
                 ]
             }, {
@@ -34,11 +35,10 @@ function main() {
                     "it looks cool that way",
                     "if it doesn't, you probably need to make it scroll, meow...",
                 ]
-            }], new Vector(canvas.width, canvas.height)
-            );
+            }], screenDimensions);
 
             game.transition((stage) => {
-                return new FadeTransition(stage, shooter, 200);
+                return new FadeTransition(stage, shooter, 200, screenDimensions);
             }, "replace");
         });
 
