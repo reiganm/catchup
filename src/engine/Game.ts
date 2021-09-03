@@ -8,6 +8,7 @@ export class Game {
     stages: Stage[]
     currentTransition: Transition
     updateInterval: number;
+    currentlyPressedKeys: Set<string>;
 
     /** Last recorded value of global */
     timer: number
@@ -17,6 +18,8 @@ export class Game {
         this.context = canvas.getContext("2d");
         this.stages = [];
         this.currentTransition = null;
+        this.updateInterval = 0;
+        this.currentlyPressedKeys = new Set();
     }
 
     private listenForInput() {
@@ -28,6 +31,19 @@ export class Game {
     }
 
     private handleInput(event: KeyboardEvent) {
+        // Ignore repeated keypresses generated when user is holding the key
+        if (event.type === "keydown") {
+            if (this.currentlyPressedKeys.has(event.key)) {
+                return;
+            } else {
+                this.currentlyPressedKeys.add(event.key); 
+            }
+        }
+
+        if (event.type === "keyup") {
+            this.currentlyPressedKeys.delete(event.key); 
+        }
+
         const stage = this.getFrontStage();
         if (stage === null) {
             return;

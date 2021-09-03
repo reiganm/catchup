@@ -18,11 +18,7 @@ function main() {
         loadImage("img/test-splash-2.png"),
     ]).then(([image1, image2]) => {
         const splash = new SplashScreenStage(screenDimensions, image1, () => {
-            // const shooter = new ShooterStage({ 
-                // background: image2,
-                // dimensions: new Vector(400, 300),
-            // });
-            const shooter = new CutsceneStage([{
+            const cutscene = new CutsceneStage([{
                 imageSrc: "img/test-scene-1.png",
                 dialogues: [
                     "hello, hello, this is a test dialogue; ".repeat(5),
@@ -35,10 +31,20 @@ function main() {
                     "it looks cool that way",
                     "if it doesn't, you probably need to make it scroll, meow...",
                 ]
-            }], screenDimensions);
+            }], screenDimensions, () => {
+                const shooter = new ShooterStage({ 
+                    background: image2,
+                    screenDimensions: screenDimensions
+                });
+
+                game.transition((stage) => {
+                    return new FadeTransition(stage, shooter, 1000, screenDimensions);
+                }, "replace");
+
+            });
 
             game.transition((stage) => {
-                return new FadeTransition(stage, shooter, 200, screenDimensions);
+                return new FadeTransition(stage, cutscene, 200, screenDimensions);
             }, "replace");
         });
 

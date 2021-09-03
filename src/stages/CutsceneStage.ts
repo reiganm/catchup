@@ -33,7 +33,11 @@ export class CutsceneStage extends Stage {
     promptTimer: Timer;
     textSpeed: CharsPerSecond;
 
-    constructor(scenes: SceneDefinition[], screenDimensions: Vector) {
+    constructor(
+        scenes: SceneDefinition[],
+        screenDimensions: Vector,
+        onCutsceneFinished: () => void
+    ) {
         super(screenDimensions);
 
         this.scenes = scenes;
@@ -42,7 +46,7 @@ export class CutsceneStage extends Stage {
         this.imageHorizontalOffset = 0;
         this.currentImage = null;
         this.promptImage = elt.image("img/prompt.png", () => {}, () => {});
-        this.onCutsceneFinished = null;
+        this.onCutsceneFinished = onCutsceneFinished;
         this.dialogueTimer = null;
         this.promptTimer = new Timer("repeat", 500, () => {});
         this.textSpeed = NORMAL_TEXT_SPEED;
@@ -74,6 +78,8 @@ export class CutsceneStage extends Stage {
     }
 
     private goToNextDialogue() {
+        if (this.currentScene === null) return;
+
         this.currentDialogueIndex += 1;
         if (this.currentDialogueIndex >= this.currentScene.dialogues.length) {
             this.goToNextScene();
@@ -94,6 +100,8 @@ export class CutsceneStage extends Stage {
     }
 
     private recreateDialogueTimer() {
+        if (this.currentDialogue === null) return;
+
         this.dialogueTimer = new Timer(
             "once",
             this.currentDialogue.length * 1000 / NORMAL_TEXT_SPEED,

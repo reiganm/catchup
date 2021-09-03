@@ -9,7 +9,7 @@ import { randomFromRange } from "../util/random";
 
 type ShooterStageConfig = {
     background: HTMLImageElement,
-    dimensions: Vector,
+    screenDimensions: Vector,
 };
 
 export class ShooterStage extends Stage {
@@ -18,7 +18,7 @@ export class ShooterStage extends Stage {
     enemySpawnTimer: Timer;
 
     constructor(config: ShooterStageConfig) {
-        super(config.dimensions);
+        super(config.screenDimensions);
         
         this.player = new PlayerShip();
         this.player.velocity = new Vector(20, 40);
