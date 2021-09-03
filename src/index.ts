@@ -34,7 +34,15 @@ function main() {
                 image2.style.imageRendering = "pixelated";
                 const shooter = new ShooterStage({ 
                     background: image2,
-                    screenDimensions: screenDimensions
+                    screenDimensions: screenDimensions,
+                    level: {
+                        cameraHeight: 20,
+                        cameraCenter: 200,
+                        closeness: 10,
+                        ceilHeight: 90,
+                        totalHeight: 300,
+                        ambientBrightness: 0.2,
+                    }
                 });
 
                 game.transition((stage) => {

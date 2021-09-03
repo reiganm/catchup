@@ -7,14 +7,26 @@ import { EnemyShip } from "./shooter/EnemyShip";
 import { Timer } from "../util/Timer";
 import { randomFromRange } from "../util/random";
 
+
+type LevelConfig = {
+    cameraHeight: number,
+    cameraCenter: number,
+    closeness: number,
+    ceilHeight: number,
+    totalHeight: number,
+    ambientBrightness: number,
+};
+
 type ShooterStageConfig = {
     background: HTMLImageElement,
     screenDimensions: Vector,
+    level: LevelConfig,
 };
 
 const BACKGROUND_SCROLL_SPEED = 10;
 
 export class ShooterStage extends Stage {
+    levelConfig: LevelConfig;
     player: PlayerShip;
     objects: ShooterObject[];
     background: HTMLImageElement;
@@ -24,6 +36,7 @@ export class ShooterStage extends Stage {
     constructor(config: ShooterStageConfig) {
         super(config.screenDimensions);
         
+        this.levelConfig = config.level;
         this.player = new PlayerShip();
         this.objects = [];
         this.background = config.background;
@@ -120,29 +133,24 @@ export class ShooterStage extends Stage {
 
         const blockHeight = 3;
         for (let i = 0; i < this.screenDimensions.y; i+=blockHeight) {
+            const level = this.levelConfig;
             const backgroundOffset = -Math.floor(this.background.width * this.backgroundScrollTimer.progress);
-            const cameraHeight = 20;
-            const cameraCenter = 200;
-            const closeness = 10;
-            const ceilHeight = 90;
-            const totalHeight = 300;
-            const ambientBrightness = 0.2;
-            const floorLevel = totalHeight - ceilHeight;
+            const floorLevel = level.totalHeight - level.ceilHeight;
             const rowZoom = ((x) => {
-                if (x <= ceilHeight) {
-                    return -closeness/ceilHeight*x + closeness + 1;
+                if (x <= level.ceilHeight) {
+                    return -level.closeness/level.ceilHeight*x + level.closeness + 1;
                 } else if (x <= floorLevel) {
                     return 1;
                 } else {
-                    return closeness/ceilHeight*(x - floorLevel) + 1;
+                    return level.closeness/level.ceilHeight*(x - floorLevel) + 1;
                 }
-            })(i - cameraHeight);
+            })(i - level.cameraHeight);
             for (const localOffset of [-this.background.width, 0, +this.background.width]) {
-                context.globalAlpha = 1 - 1 / rowZoom + ambientBrightness;
+                context.globalAlpha = 1 - 1 / rowZoom + level.ambientBrightness;
                 context.drawImage(
                     this.background,
                     0, i, this.background.width, blockHeight,
-                    rowZoom * (localOffset + backgroundOffset) + cameraCenter, i, rowZoom * this.background.width, blockHeight
+                    rowZoom * (localOffset + backgroundOffset) + level.cameraCenter, i, rowZoom * this.background.width, blockHeight
                 );
             }
         }
