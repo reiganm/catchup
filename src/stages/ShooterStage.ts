@@ -12,17 +12,26 @@ type ShooterStageConfig = {
     screenDimensions: Vector,
 };
 
+const BACKGROUND_SCROLL_SPEED = 10;
+
 export class ShooterStage extends Stage {
     player: PlayerShip;
     objects: ShooterObject[];
+    background: HTMLImageElement;
+    backgroundScrollTimer: Timer;
     enemySpawnTimer: Timer;
 
     constructor(config: ShooterStageConfig) {
         super(config.screenDimensions);
         
         this.player = new PlayerShip();
-        this.player.velocity = new Vector(20, 40);
         this.objects = [];
+        this.background = config.background;
+
+        this.backgroundScrollTimer = new Timer("repeat", 1000 * BACKGROUND_SCROLL_SPEED, () => {
+            
+        });
+
         this.enemySpawnTimer = new Timer("repeat", 1000, () => {
             const randomY = randomFromRange(50, 250);
             const enemy = new EnemyShip(420, randomY);
@@ -78,6 +87,7 @@ export class ShooterStage extends Stage {
     }
 
     update(dt: number) {
+        this.backgroundScrollTimer.update(dt);
         this.enemySpawnTimer.update(dt);
 
         for (const object of this.objects.slice()) {
@@ -107,6 +117,13 @@ export class ShooterStage extends Stage {
     render(context: CanvasRenderingContext2D) {
         context.fillStyle = "black";
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+        context.globalAlpha = 0.5;
+        const backgroundOffset = -Math.floor(this.background.width * this.backgroundScrollTimer.progress);
+        context.drawImage(this.background, backgroundOffset, 0);
+        context.drawImage(this.background, this.background.width + backgroundOffset, 0);
+        context.globalAlpha = 1.0;
+
         for (const object of this.objects) {
             object.render(context);
         }
