@@ -3,7 +3,6 @@ import { Timer } from "../util/Timer";
 import { Vector } from "../util/Vector";
 import { elt } from "../util/elt";
 import { loadImage } from "../util/loadImage";
-import { Game } from "../engine/Game";
 import { GameInputEvent } from "../engine/GameInputEvent";
 
 type SceneDefinition = {
@@ -11,23 +10,28 @@ type SceneDefinition = {
     dialogues: string[]
 }
 
-/** Text speed: characters per second */
-const NORMAL_TEXT_SPEED = 30;
-/** Fast text speed: characters per second */
-const FASTER_TEXT_SPEED = 300;
+type Px = number;
+type Index = number;
+type CharsPerSecond = number;
+type PxPerSecond = number;
+
+const NORMAL_TEXT_SPEED: CharsPerSecond = 30;
+const FASTER_TEXT_SPEED: CharsPerSecond = 300;
+const PAN_SPEED: PxPerSecond = 20;
 
 const DIALOGUE_HEIGHT = 100;
 
 export class CutsceneStage extends Stage {
     scenes: SceneDefinition[]
-    currentSceneIndex: number;
-    currentDialogueIndex: number;
+    currentSceneIndex: Index;
+    currentDialogueIndex: Index;
+    imageHorizontalOffset: Px;
     currentImage: HTMLImageElement;
     promptImage: HTMLImageElement;
     onCutsceneFinished: () => void;
     dialogueTimer: Timer;
     promptTimer: Timer;
-    textSpeed: number;
+    textSpeed: CharsPerSecond;
 
     constructor(scenes: SceneDefinition[], screenDimensions: Vector) {
         super(screenDimensions);
@@ -35,6 +39,7 @@ export class CutsceneStage extends Stage {
         this.scenes = scenes;
         this.currentSceneIndex = 0;
         this.currentDialogueIndex = 0;
+        this.imageHorizontalOffset = 0;
         this.currentImage = null;
         this.promptImage = elt.image("img/prompt.png", () => {}, () => {});
         this.onCutsceneFinished = null;
@@ -55,7 +60,7 @@ export class CutsceneStage extends Stage {
         return (this.dialogueTimer?.progress ?? 0) === 1;
     }
 
-    private goToNextScene() {
+    private async goToNextScene() {
         this.currentSceneIndex += 1;
         if (this.currentSceneIndex >= this.scenes.length) {
             this.onCutsceneFinished();
@@ -63,6 +68,9 @@ export class CutsceneStage extends Stage {
         }
 
         this.currentDialogueIndex = 0;
+        this.imageHorizontalOffset = 0;
+
+        await this.prepareScene(this.currentScene);
     }
 
     private goToNextDialogue() {
@@ -107,6 +115,7 @@ export class CutsceneStage extends Stage {
         if (event.key === " " && event.state === "down") {
             if (this.isDialogueFinished) {
                 this.goToNextDialogue();
+                return;
             }
 
             this.enableFastText();
@@ -122,6 +131,9 @@ export class CutsceneStage extends Stage {
             this.dialogueTimer.update(dt * this.textSpeed / NORMAL_TEXT_SPEED);
         }
         this.promptTimer.update(dt);
+        if (this.imageHorizontalOffset <= this.currentImage.width - this.screenDimensions.x) {
+            this.imageHorizontalOffset += (PAN_SPEED / 1000 * dt);
+        }
     }
 
     private splitLines(
@@ -154,7 +166,7 @@ export class CutsceneStage extends Stage {
         const dialogueProgress = this.dialogueTimer?.progress ?? 0;
 
         if (this.currentImage !== null) {
-            context.drawImage(this.currentImage, 0, 0); 
+            context.drawImage(this.currentImage, Math.floor(-this.imageHorizontalOffset), 0); 
         }
         
         if (this.currentDialogue !== null) {
