@@ -118,10 +118,35 @@ export class ShooterStage extends Stage {
         context.fillStyle = "black";
         context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
-        context.globalAlpha = 0.5;
-        const backgroundOffset = -Math.floor(this.background.width * this.backgroundScrollTimer.progress);
-        context.drawImage(this.background, backgroundOffset, 0);
-        context.drawImage(this.background, this.background.width + backgroundOffset, 0);
+        const blockHeight = 3;
+        for (let i = 0; i < this.screenDimensions.y; i+=blockHeight) {
+            const backgroundOffset = -Math.floor(this.background.width * this.backgroundScrollTimer.progress);
+            const cameraHeight = 20;
+            const cameraCenter = 200;
+            const closeness = 10;
+            const ceilHeight = 90;
+            const totalHeight = 300;
+            const ambientBrightness = 0.2;
+            const floorLevel = totalHeight - ceilHeight;
+            const rowZoom = ((x) => {
+                if (x <= ceilHeight) {
+                    return -closeness/ceilHeight*x + closeness + 1;
+                } else if (x <= floorLevel) {
+                    return 1;
+                } else {
+                    return closeness/ceilHeight*(x - floorLevel) + 1;
+                }
+            })(i - cameraHeight);
+            for (const localOffset of [-this.background.width, 0, +this.background.width]) {
+                context.globalAlpha = 1 - 1 / rowZoom + ambientBrightness;
+                context.drawImage(
+                    this.background,
+                    0, i, this.background.width, blockHeight,
+                    rowZoom * (localOffset + backgroundOffset) + cameraCenter, i, rowZoom * this.background.width, blockHeight
+                );
+            }
+        }
+
         context.globalAlpha = 1.0;
 
         for (const object of this.objects) {

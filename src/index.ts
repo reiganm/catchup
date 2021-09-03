@@ -15,13 +15,12 @@ function main() {
     const game = new Game(canvas);
     Promise.all([
         loadImage("img/test-splash.png"),
-        loadImage("img/test-splash-2.png"),
+        loadImage("img/bathroom.png"),
     ]).then(([image1, image2]) => {
         const splash = new SplashScreenStage(screenDimensions, image1, () => {
             const cutscene = new CutsceneStage([{
                 imageSrc: "img/test-scene-1.png",
                 dialogues: [
-                    "hello, hello, this is a test dialogue; ".repeat(5),
                     "meow meow meow",
                 ]
             }, {
@@ -31,7 +30,8 @@ function main() {
                     "it looks cool that way",
                     "if it doesn't, you probably need to make it scroll, meow...",
                 ]
-            }], screenDimensions, () => {
+            }].slice(0, 1), screenDimensions, () => {
+                image2.style.imageRendering = "pixelated";
                 const shooter = new ShooterStage({ 
                     background: image2,
                     screenDimensions: screenDimensions
