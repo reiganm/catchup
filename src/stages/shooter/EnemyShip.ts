@@ -20,6 +20,6 @@ export class EnemyShip extends Gunner {
     }
 
     collideWithObject(object: ShooterObject) {
-        object.destroy();
+        object.explode();
     }
 }
