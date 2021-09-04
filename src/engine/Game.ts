@@ -29,7 +29,6 @@ export class Game {
             });
         }   
     }
-
     private handleInput(event: KeyboardEvent) {
         // Ignore repeated keypresses generated when user is holding the key
         if (event.type === "keydown") {

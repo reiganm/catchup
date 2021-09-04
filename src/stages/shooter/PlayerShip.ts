@@ -1,8 +1,6 @@
-import { ShooterObject } from "./ShooterObject";
 import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
-import { Bullet } from "./Bullet";
-import { Timer } from "../../util/Timer";
+import { Gunner } from "./Gunner";
 
 export type PlayerControlDirection = "w" | "a" | "s" | "d";
 
@@ -17,10 +15,9 @@ function oppositeDirection(direction: PlayerControlDirection): PlayerControlDire
     return opposites[direction];
 }
 
-export class PlayerShip extends ShooterObject {
+export class PlayerShip extends Gunner {
     activeDirections: Set<PlayerControlDirection>;
     maximumSpeed: number;
-    shootingTimer: Timer;
 
     constructor() {
         super(20, 150, new BBox(
@@ -30,17 +27,7 @@ export class PlayerShip extends ShooterObject {
         this.maximumSpeed = 250;
         this.activeDirections = new Set();
 
-        this.shootingTimer = new Timer("repeat", 250, () => {
-            const box = this.effectiveBBox;
-            const bullet = new Bullet(
-                box.minX + box.width,
-                box.minY + box.height / 2
-            );
-            // please don't do this
-            //bullet.velocity = bullet.velocity.adding(this.velocity.scaled(0.1));
-            this.spawner.spawn(bullet);
-        });
-        this.shootingTimer.isHolding = true;
+        this.stopShooting();
 
         this.collisionGroup = "player";
     }
@@ -58,17 +45,7 @@ export class PlayerShip extends ShooterObject {
         this.activeDirections.delete(direction);
     }
 
-    startShooting() {
-        this.shootingTimer.isHolding = false;
-    }
-
-    stopShooting() {
-        this.shootingTimer.isHolding = true;
-    }
-
     update(dt: number) {
-        this.shootingTimer.update(dt);
-
         switch (this.directionSymbol) {
             case "w":
                 this.velocity = new Vector(0, -1);
