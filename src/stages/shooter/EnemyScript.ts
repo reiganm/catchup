@@ -46,7 +46,9 @@ export class EnemyScript {
 
     update(dt: number) {
         if (this.instructionPointer >= this.instructions.length) {
-            return;
+            // TODO: don't leave it like that, it should actually end somewhere...
+            this.instructionPointer = 0;
+            // return;
         }
 
         this.counter += dt;

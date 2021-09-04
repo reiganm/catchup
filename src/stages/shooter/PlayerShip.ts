@@ -34,7 +34,7 @@ export class PlayerShip extends Gunner {
         this.activeDirections = new Set();
         this.maximumSpeed = 250;
         this.invincibilityFlickerFlag = false;
-        this.invincibilityTimer = new Timer("once", 4000, () => {
+        this.invincibilityTimer = new Timer("once", 3000, () => {
             this.isInvincible = false;
         });
         this.invincibilityTimer.isSleeping = true;

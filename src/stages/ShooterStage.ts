@@ -22,6 +22,7 @@ type ShooterStageConfig = {
     background: HTMLImageElement,
     screenDimensions: Vector,
     level: LevelConfig,
+    lives: number;
     enemyScript: string[]
 };
 
@@ -30,6 +31,8 @@ const BACKGROUND_SCROLL_SPEED = 10;
 export class ShooterStage extends Stage {
     levelConfig: LevelConfig;
     player: PlayerShip;
+    lives: number;
+    isGameOver: boolean;
     objects: ShooterObject[];
     background: HTMLImageElement;
     backgroundScrollTimer: Timer;
@@ -41,6 +44,8 @@ export class ShooterStage extends Stage {
         
         this.levelConfig = config.level;
         this.player = new PlayerShip();
+        this.lives = config.lives;
+        this.isGameOver = false;
         this.objects = [];
         this.background = config.background;
 
@@ -49,6 +54,11 @@ export class ShooterStage extends Stage {
         });
 
         this.playerRespawnTimer = new Timer("once", 2000, () => {
+            if (this.lives === 0) {
+                this.isGameOver = true;
+                return;
+            }
+            this.lives -= 1;
             this.player = new PlayerShip();
             this.player.activateTemporaryInvincibility();
             this.addObject(this.player);
@@ -183,7 +193,13 @@ export class ShooterStage extends Stage {
 
         context.fillStyle = "white";
         context.font = "8px amiga4ever"
-        context.fillText(`${this.player.directionSymbol.padEnd(2, "_")} | ${this.objects.length}`, 5, 15);
+        context.fillText(`Lives: ${this.lives} | ${this.player.directionSymbol.padEnd(2, "_")} | ${this.objects.length}`, 5, 12);
+
+        if (this.isGameOver) {
+            context.textAlign = "center";
+            context.fillText("GAME OVER", this.screenDimensions.x / 2, this.screenDimensions.y / 2, )
+            context.textAlign = "left";
+        }
     }
 
     input(event: GameInputEvent) {

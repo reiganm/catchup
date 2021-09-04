@@ -45,6 +45,7 @@ function main() {
                         ambientBrightness: 0.2,
                     },
                     enemyScript: sampleEnemyScript,
+                    lives: 9,
                 });
 
                 game.transition((stage) => {
