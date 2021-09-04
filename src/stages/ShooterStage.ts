@@ -71,6 +71,7 @@ export class ShooterStage extends Stage {
     private addObject(object: ShooterObject) {
         this.objects.push(object);
         object.spawner = this.makeObjectSpawner();
+        object.didSpawn();
     }
 
     private removeObject(object: ShooterObject) {

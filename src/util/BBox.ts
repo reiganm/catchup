@@ -19,6 +19,14 @@ export class BBox {
         return this.minY + this.height;
     }
 
+    get centerX(): number {
+        return this.minX + this.width / 2;
+    }
+
+    get centerY(): number {
+        return this.minY + this.height / 2;
+    }
+
     isPointInside(x: number, y: number): boolean {
         return (
             x >= this.minX

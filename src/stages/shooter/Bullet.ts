@@ -26,7 +26,7 @@ export class Bullet extends ShooterObject {
     }
 
     collideWithObject(object: ShooterObject) {
-        object.destroy();
+        object.explode();
         this.destroy();
     }
 }

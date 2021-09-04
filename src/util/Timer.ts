@@ -12,6 +12,9 @@ export class Timer {
     /** Will not count time if true */
     isSleeping: boolean;
     
+    /** Creates a timer. When creating a timer with `"once"` mode, be sure
+     * to call `reset()` when you want to run it.
+     */
     constructor(mode: TimerMode, resetValue: number, action: () => void) {
         this.mode = mode;
         this.resetValue = resetValue;
