@@ -1,4 +1,5 @@
 import { BBox } from "../../util/BBox";
+import { Timer } from "../../util/Timer";
 import { Vector } from "../../util/Vector";
 import { Gunner } from "./Gunner";
 
@@ -18,6 +19,8 @@ function oppositeDirection(direction: PlayerControlDirection): PlayerControlDire
 export class PlayerShip extends Gunner {
     activeDirections: Set<PlayerControlDirection>;
     maximumSpeed: number;
+    invincibilityFlickerFlag: boolean;
+    invincibilityTimer: Timer;
 
     constructor() {
         super(20, 150, new BBox(
@@ -28,8 +31,13 @@ export class PlayerShip extends Gunner {
             shouldRandomizeShootingTimer: false,
         });
 
-        this.maximumSpeed = 250;
         this.activeDirections = new Set();
+        this.maximumSpeed = 250;
+        this.invincibilityFlickerFlag = false;
+        this.invincibilityTimer = new Timer("once", 4000, () => {
+            this.isInvincible = false;
+        });
+        this.invincibilityTimer.isSleeping = true;
 
         this.stopShooting();
 
@@ -49,7 +57,14 @@ export class PlayerShip extends Gunner {
         this.activeDirections.delete(direction);
     }
 
+    activateTemporaryInvincibility() {
+        this.isInvincible = true;
+        this.invincibilityTimer.reset(); 
+    }
+
     update(dt: number) {
+        this.invincibilityTimer.update(dt);
+
         switch (this.directionSymbol) {
             case "w":
                 this.velocity = new Vector(0, -1);
@@ -86,5 +101,15 @@ export class PlayerShip extends Gunner {
         }
 
         super.update(dt);
+    }
+
+    render(context: CanvasRenderingContext2D) {
+        this.invincibilityFlickerFlag = !this.invincibilityFlickerFlag;
+
+        if (this.isInvincible && this.invincibilityFlickerFlag) {
+            return;
+        }
+
+        super.render(context);
     }
 }

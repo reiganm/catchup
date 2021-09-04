@@ -33,6 +33,7 @@ export class ShooterStage extends Stage {
     objects: ShooterObject[];
     background: HTMLImageElement;
     backgroundScrollTimer: Timer;
+    playerRespawnTimer: Timer;
     enemyScript: EnemyScript;
 
     constructor(config: ShooterStageConfig) {
@@ -46,6 +47,13 @@ export class ShooterStage extends Stage {
         this.backgroundScrollTimer = new Timer("repeat", 1000 * BACKGROUND_SCROLL_SPEED, () => {
             // do nothing
         });
+
+        this.playerRespawnTimer = new Timer("once", 2000, () => {
+            this.player = new PlayerShip();
+            this.player.activateTemporaryInvincibility();
+            this.addObject(this.player);
+        });
+        this.playerRespawnTimer.isSleeping = true;
 
         this.enemyScript = new EnemyScript(
             this.makeObjectSpawner(),
@@ -82,6 +90,10 @@ export class ShooterStage extends Stage {
         }
         const [removedObject] = this.objects.splice(index, 1);
         removedObject.spawner = null;
+
+        if (object === this.player) {
+            this.playerRespawnTimer.reset();
+        }
     }
 
     private shouldRemoveObject(object: ShooterObject): boolean {
@@ -109,6 +121,7 @@ export class ShooterStage extends Stage {
     update(dt: number) {
         this.backgroundScrollTimer.update(dt);
         this.enemyScript.update(dt);
+        this.playerRespawnTimer.update(dt);
 
         for (const object of this.objects.slice()) {
             if (this.shouldRemoveObject(object)) {

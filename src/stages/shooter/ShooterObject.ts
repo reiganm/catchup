@@ -18,6 +18,7 @@ export class ShooterObject {
     collisionGroup: CollisionGroup;
     /** Collision group this object will collide to */
     targetCollisionGroup: CollisionGroup;
+    isInvincible: boolean;
 
     constructor(x: number, y: number, bbox: BBox) {
         this.x = x;
@@ -27,6 +28,7 @@ export class ShooterObject {
         this.localBBox = bbox;
         this.collisionGroup = null;
         this.targetCollisionGroup = null;
+        this.isInvincible = false;
     }
 
     /** BBox of the object but in world coordinates */
@@ -63,6 +65,7 @@ export class ShooterObject {
     }
 
     explode() {
+        if (this.isInvincible) return;
         this.spawner.spawn(
             new Explosion(this.x, this.y, this.localBBox)
         );
