@@ -22,7 +22,10 @@ export class PlayerShip extends Gunner {
     constructor() {
         super(20, 150, new BBox(
             -3, -24, 24, 48
-        ));
+        ), {
+            bulletAllegiance: "player",
+            shotsPerSecond: 4,
+        });
 
         this.maximumSpeed = 250;
         this.activeDirections = new Set();
