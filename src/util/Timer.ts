@@ -1,3 +1,5 @@
+import { randomFromRange } from "./random";
+
 type TimerMode = "once" | "repeat";
 
 export class Timer {
@@ -42,5 +44,9 @@ export class Timer {
     /** A number in range [0; 1] that represents how close timer value is to completion. */
     get progress(): number {
         return 1 - this.currentValue / this.resetValue;
+    }
+
+    randomizeProgress() {
+        this.currentValue = randomFromRange(0, this.resetValue);
     }
 }

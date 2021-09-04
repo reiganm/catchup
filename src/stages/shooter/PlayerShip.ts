@@ -25,6 +25,7 @@ export class PlayerShip extends Gunner {
         ), {
             bulletAllegiance: "player",
             shotsPerSecond: 4,
+            shouldRandomizeShootingTimer: false,
         });
 
         this.maximumSpeed = 250;

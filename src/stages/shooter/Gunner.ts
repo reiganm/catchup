@@ -6,6 +6,7 @@ import { BBox } from "../../util/BBox";
 export type GunnerConfig = {
     bulletAllegiance: BulletAllegiance,
     shotsPerSecond: number,
+    shouldRandomizeShootingTimer: boolean,
 };
 
 /** A base class for game objects that can shoot */
@@ -25,6 +26,10 @@ export class Gunner extends ShooterObject {
 
             this.spawner.spawn(bullet);
         });
+
+        if (config.shouldRandomizeShootingTimer) {
+            this.shootingTimer.randomizeProgress();
+        }
     }
 
     startShooting() {

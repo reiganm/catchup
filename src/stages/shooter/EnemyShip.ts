@@ -10,6 +10,7 @@ export class EnemyShip extends Gunner {
         ), {
             bulletAllegiance: "enemy",
             shotsPerSecond: 2,
+            shouldRandomizeShootingTimer: true,
         });
 
         this.velocity = new Vector(-200, 0);
