@@ -6,6 +6,7 @@ import { CutsceneStage } from "./stages/CutsceneStage";
 import { FadeTransition } from "./transitions/FadeTransition";
 import { Vector } from "./util/Vector";
 import { loadImage } from "./util/loadImage";
+import { sampleEnemyScript } from "./stages/shooter/EnemyScript";
 
 function main() {
     const screenDimensions = new Vector(400, 300);
@@ -42,7 +43,8 @@ function main() {
                         ceilHeight: 90,
                         totalHeight: 300,
                         ambientBrightness: 0.2,
-                    }
+                    },
+                    enemyScript: sampleEnemyScript,
                 });
 
                 game.transition((stage) => {

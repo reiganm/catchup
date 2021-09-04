@@ -3,9 +3,10 @@ import { Stage } from "../engine/Stage";
 import { Vector } from "../util/Vector";
 import { ShooterObject } from "./shooter/ShooterObject";
 import { PlayerShip } from "./shooter/PlayerShip";
-import { EnemyShip } from "./shooter/EnemyShip";
 import { Timer } from "../util/Timer";
 import { randomFromRange } from "../util/random";
+import { EnemyScript } from "./shooter/EnemyScript";
+import { ObjectSpawner } from "./shooter/ObjectSpawner";
 
 
 type LevelConfig = {
@@ -21,6 +22,7 @@ type ShooterStageConfig = {
     background: HTMLImageElement,
     screenDimensions: Vector,
     level: LevelConfig,
+    enemyScript: string[]
 };
 
 const BACKGROUND_SCROLL_SPEED = 10;
@@ -31,7 +33,7 @@ export class ShooterStage extends Stage {
     objects: ShooterObject[];
     background: HTMLImageElement;
     backgroundScrollTimer: Timer;
-    enemySpawnTimer: Timer;
+    enemyScript: EnemyScript;
 
     constructor(config: ShooterStageConfig) {
         super(config.screenDimensions);
@@ -42,22 +44,21 @@ export class ShooterStage extends Stage {
         this.background = config.background;
 
         this.backgroundScrollTimer = new Timer("repeat", 1000 * BACKGROUND_SCROLL_SPEED, () => {
-            
+            // do nothing
         });
 
-        this.enemySpawnTimer = new Timer("repeat", 1000, () => {
-            const randomY = randomFromRange(50, 250);
-            const enemy = new EnemyShip(420, randomY);
-            this.addObject(enemy);
-        });
+        this.enemyScript = new EnemyScript(
+            this.makeObjectSpawner(),
+            this.screenDimensions,
+            config.enemyScript
+        );
 
         this.addObject(this.player);
     }
 
-    private addObject(object: ShooterObject) {
-        this.objects.push(object);
+    private makeObjectSpawner(): ObjectSpawner {
         const stage = this;
-        object.spawner = {
+        return {
             spawn(object: ShooterObject) {
                 stage.addObject(object);
             },
@@ -65,6 +66,11 @@ export class ShooterStage extends Stage {
                 stage.removeObject(object);
             }
         };
+    }
+
+    private addObject(object: ShooterObject) {
+        this.objects.push(object);
+        object.spawner = this.makeObjectSpawner();
     }
 
     private removeObject(object: ShooterObject) {
@@ -101,7 +107,7 @@ export class ShooterStage extends Stage {
 
     update(dt: number) {
         this.backgroundScrollTimer.update(dt);
-        this.enemySpawnTimer.update(dt);
+        this.enemyScript.update(dt);
 
         for (const object of this.objects.slice()) {
             if (this.shouldRemoveObject(object)) {
