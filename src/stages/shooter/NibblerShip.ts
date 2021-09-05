@@ -36,6 +36,10 @@ export class NibblerShip extends Gunner {
 
     render(context: CanvasRenderingContext2D) {
         const ebbox = this.effectiveBBox;
-        context.drawImage(this.image, ebbox.minX, ebbox.minY);
+        context.drawImage(
+            this.image,
+            Math.floor(ebbox.minX),
+            Math.floor(ebbox.minY)
+        );
     }
 }

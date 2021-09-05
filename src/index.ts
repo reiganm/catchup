@@ -7,7 +7,12 @@ import { FadeTransition } from "./transitions/FadeTransition";
 import { Vector } from "./util/Vector";
 import { loadImage } from "./util/loadImage";
 import { sampleEnemyScript } from "./stages/shooter/EnemyScript";
+import { enableInvincibilityCheat } from "./stages/ShooterStage";
 
+Object.defineProperty(window, "CATMODE", { get() {
+    enableInvincibilityCheat();
+    return "The cat now has infinite lives.";
+}});
 function main() {
     const screenDimensions = new Vector(400, 300);
     const canvas = elt.canvas(screenDimensions.x, screenDimensions.y);

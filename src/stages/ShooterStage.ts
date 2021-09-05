@@ -9,7 +9,6 @@ import { EnemyScript } from "./shooter/EnemyScript";
 import { ObjectSpawner } from "./shooter/ObjectSpawner";
 import { Aimer } from "./shooter/Aimer";
 
-
 type LevelConfig = {
     cameraHeight: number,
     cameraCenter: number,
@@ -28,6 +27,12 @@ type ShooterStageConfig = {
 };
 
 const BACKGROUND_SCROLL_SPEED = 10;
+
+let isInvincibilityCheatOn = false;
+
+export function enableInvincibilityCheat() {
+    isInvincibilityCheatOn = true;
+}
 
 export class ShooterStage extends Stage {
     levelConfig: LevelConfig;
@@ -59,7 +64,9 @@ export class ShooterStage extends Stage {
                 this.isGameOver = true;
                 return;
             }
-            this.lives -= 1;
+            if (!isInvincibilityCheatOn) {
+                this.lives -= 1;
+            }
             this.player = new PlayerShip();
             this.player.activateTemporaryInvincibility();
             this.addObject(this.player);
