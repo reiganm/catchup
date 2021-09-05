@@ -11,8 +11,6 @@ export class ShooterObject {
     x: number;
     y: number;
     velocity: Vector;
-    /** Fill style to use when object doens't define its own render routine. */
-    defaultFillStyle: string;
     localBBox: BBox;
     /** Collision group this object belongs to */
     collisionGroup: CollisionGroup;
@@ -27,7 +25,6 @@ export class ShooterObject {
         this.x = x;
         this.y = y;
         this.velocity = new Vector(0, 0);
-        this.defaultFillStyle = "white";
         this.localBBox = bbox;
         this.collisionGroup = null;
         this.targetCollisionGroup = null;
@@ -52,13 +49,8 @@ export class ShooterObject {
 
     render(context: CanvasRenderingContext2D) {
         const ebbox = this.effectiveBBox;
-        context.fillStyle = this.defaultFillStyle;
-        context.fillRect(
-            Math.floor(ebbox.minX),
-            Math.floor(ebbox.minY),
-            Math.floor(ebbox.width),
-            Math.floor(ebbox.height)
-        );
+        context.strokeStyle = "red";
+        context.strokeRect(ebbox.minX, ebbox.minY, ebbox.width, ebbox.height);
     }
 
     update(dt: number) {

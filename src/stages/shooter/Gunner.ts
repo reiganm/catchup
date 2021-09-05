@@ -2,6 +2,7 @@ import { ShooterObject } from "./ShooterObject";
 import { Bullet, BulletAllegiance } from "./Bullet";
 import { Timer } from "../../util/Timer";
 import { BBox } from "../../util/BBox";
+import { Vector } from "../../util/Vector";
 
 export type GunnerConfig = {
     bulletAllegiance: BulletAllegiance,
@@ -17,10 +18,10 @@ export class Gunner extends ShooterObject {
         super(x, y, bbox);
 
         this.shootingTimer = new Timer("repeat", 1000 / config.shotsPerSecond, () => {
-            const ebbox = this.effectiveBBox;
+            const gunpoint = this.gunpoint;
             const bullet = new Bullet(
-                ebbox.centerX,
-                ebbox.centerY,
+                gunpoint.x,
+                gunpoint.y,
                 config.bulletAllegiance
             );
 
@@ -32,6 +33,14 @@ export class Gunner extends ShooterObject {
         if (config.shouldRandomizeShootingTimer) {
             this.shootingTimer.randomizeProgress();
         }
+    }
+
+    /** Point where bullets are spawned */
+    get gunpoint(): Vector {
+        return new Vector(
+            this.effectiveBBox.centerX,
+            this.effectiveBBox.centerY
+        );
     }
 
     startShooting() {

@@ -1,4 +1,5 @@
 import { BBox } from "../../util/BBox";
+import { elt } from "../../util/elt";
 import { Timer } from "../../util/Timer";
 import { Vector } from "../../util/Vector";
 import { Gunner } from "./Gunner";
@@ -21,10 +22,11 @@ export class PlayerShip extends Gunner {
     maximumSpeed: number;
     invincibilityFlickerFlag: boolean;
     invincibilityTimer: Timer;
+    image: HTMLImageElement;
 
     constructor() {
         super(20, 150, new BBox(
-            -3, -24, 24, 48
+            -3, -24, 24, 38
         ), {
             bulletAllegiance: "player",
             shotsPerSecond: 4,
@@ -42,6 +44,11 @@ export class PlayerShip extends Gunner {
         this.stopShooting();
 
         this.collisionGroup = "player";
+        this.image = elt.image("img/cat.png", () => {}, () => {});
+    }
+
+    get gunpoint(): Vector {
+        return new Vector(this.x + 25, this.y - 12);
     }
 
     get directionSymbol(): string {
@@ -110,6 +117,12 @@ export class PlayerShip extends Gunner {
             return;
         }
 
-        super.render(context);
+        context.strokeStyle = "red";
+        const ebbox = this.effectiveBBox;
+        context.drawImage(
+            this.image,
+            Math.floor(ebbox.minX),
+            Math.floor(ebbox.minY - 3)
+        );
     }
 }

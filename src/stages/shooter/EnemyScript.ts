@@ -1,6 +1,6 @@
 import { Vector } from "../../util/Vector";
 import { ObjectSpawner } from "./ObjectSpawner"
-import { EnemyShip } from "./EnemyShip";
+import { NibblerShip } from "./NibblerShip";
 import { ReturnerShip } from "./ReturnerShip";
 
 export const sampleEnemyScript = [
@@ -26,7 +26,7 @@ export const sampleEnemyScript = [
     ":question_Meow, Tom, is your girlfriend coming?_ummm_Y-yeah! Any moment now...",
 ];
 
-const DEFAULT_THRESHOLD = 500;
+const DEFAULT_THRESHOLD = 250;
 
 export class EnemyScript {
     spawner: ObjectSpawner;
@@ -86,7 +86,7 @@ export class EnemyScript {
                 case "-":
                     continue;
                 case "a":
-                    this.spawner.spawn(new EnemyShip(xPos, yPos));
+                    this.spawner.spawn(new NibblerShip(xPos, yPos));
                     break;
                 case "b":
                     this.spawner.spawn(new ReturnerShip(xPos, yPos));
