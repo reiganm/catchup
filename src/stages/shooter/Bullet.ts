@@ -8,7 +8,7 @@ export type BulletAllegiance = "player" | "enemy";
 export class Bullet extends ShooterObject {
     constructor(x: number, y: number, allegiance: BulletAllegiance) {
         super(x, y, new BBox(
-            0, -2, 8, 4
+            -3, -3, 6, 6
         ));
 
         switch (allegiance) {
