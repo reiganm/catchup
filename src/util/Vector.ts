@@ -37,4 +37,11 @@ export class Vector {
             otherVector.y + this.y,
         )
     }
+
+    subtracting(otherVector: Vector): Vector {
+        return new Vector(
+            this.x - otherVector.x,
+            this.y - otherVector.y
+        );
+    }
 }

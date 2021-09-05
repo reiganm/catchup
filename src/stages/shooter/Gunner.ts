@@ -17,12 +17,14 @@ export class Gunner extends ShooterObject {
         super(x, y, bbox);
 
         this.shootingTimer = new Timer("repeat", 1000 / config.shotsPerSecond, () => {
-            const box = this.effectiveBBox;
+            const ebbox = this.effectiveBBox;
             const bullet = new Bullet(
-                box.minX + box.width / 2,
-                box.minY + box.height / 2,
+                ebbox.centerX,
+                ebbox.centerY,
                 config.bulletAllegiance
             );
+
+            this.setupBullet(bullet);
 
             this.spawner.spawn(bullet);
         });
@@ -43,5 +45,10 @@ export class Gunner extends ShooterObject {
     update(dt: number) {
         super.update(dt);
         this.shootingTimer.update(dt);
+    }
+
+    /** Override this in child classes to specify how you want the bullet to behave or something */
+    setupBullet(bullet: Bullet) {
+        // do nothing
     }
 }

@@ -1,3 +1,4 @@
+import { Bullet } from "./Bullet";
 import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
@@ -21,5 +22,11 @@ export class EnemyShip extends Gunner {
 
     collideWithObject(object: ShooterObject) {
         object.explode();
+    }
+
+    setupBullet(bullet: Bullet) {
+        bullet.velocity = this.aimer
+            .vectorTowardsPlayer(this.position)
+            .scaled(100);
     }
 }

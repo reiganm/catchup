@@ -1,3 +1,4 @@
+import { Aimer } from "./Aimer";
 import { Vector } from "../../util/Vector";
 import { BBox } from "../../util/BBox";
 import { ObjectSpawner } from "./ObjectSpawner";
@@ -13,12 +14,14 @@ export class ShooterObject {
     /** Fill style to use when object doens't define its own render routine. */
     defaultFillStyle: string;
     localBBox: BBox;
-    spawner: ObjectSpawner;
     /** Collision group this object belongs to */
     collisionGroup: CollisionGroup;
     /** Collision group this object will collide to */
     targetCollisionGroup: CollisionGroup;
     isInvincible: boolean;
+
+    spawner: ObjectSpawner;
+    aimer: Aimer;
 
     constructor(x: number, y: number, bbox: BBox) {
         this.x = x;
@@ -29,6 +32,13 @@ export class ShooterObject {
         this.collisionGroup = null;
         this.targetCollisionGroup = null;
         this.isInvincible = false;
+
+        this.spawner = null;
+        this.aimer = null;
+    }
+
+    get position(): Vector {
+        return new Vector(this.x, this.y);
     }
 
     /** BBox of the object but in world coordinates */

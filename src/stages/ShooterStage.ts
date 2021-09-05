@@ -7,6 +7,7 @@ import { Timer } from "../util/Timer";
 import { randomFromRange } from "../util/random";
 import { EnemyScript } from "./shooter/EnemyScript";
 import { ObjectSpawner } from "./shooter/ObjectSpawner";
+import { Aimer } from "./shooter/Aimer";
 
 
 type LevelConfig = {
@@ -86,9 +87,21 @@ export class ShooterStage extends Stage {
         };
     }
 
+    private makeAimer(): Aimer {
+        const player = this.player;
+        return {
+            vectorTowardsPlayer(sourcePoint: Vector): Vector {
+                return player.position
+                    .subtracting(sourcePoint)
+                    .normalized();
+            }     
+        };
+    }
+
     private addObject(object: ShooterObject) {
         this.objects.push(object);
         object.spawner = this.makeObjectSpawner();
+        object.aimer = this.makeAimer();
         object.didSpawn();
     }
 
@@ -100,6 +113,7 @@ export class ShooterStage extends Stage {
         }
         const [removedObject] = this.objects.splice(index, 1);
         removedObject.spawner = null;
+        removedObject.aimer = null;
 
         if (object === this.player) {
             this.playerRespawnTimer.reset();
