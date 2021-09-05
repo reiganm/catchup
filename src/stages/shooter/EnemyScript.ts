@@ -1,12 +1,17 @@
 import { Vector } from "../../util/Vector";
 import { ObjectSpawner } from "./ObjectSpawner"
 import { EnemyShip } from "./EnemyShip";
+import { ReturnerShip } from "./ReturnerShip";
 
 export const sampleEnemyScript = [
     ":wait_1000",
     "-a----",
     "-a----",
     "-a----",
+    ":wait_500",
+    "-b-b-",
+    "-b--b-",
+    "-b---b-",
     ":wait_500",
     "----a-",
     "----a-",
@@ -75,14 +80,19 @@ export class EnemyScript {
 
     private spawnEnemies(instruction: string) {
         for (let i = 0; i < instruction.length; i++) {
-            if (instruction[i] === "-") {
-                continue;
+            const xPos = this.screenDimensions.x + 20;
+            const yPos = (this.screenDimensions.y / instruction.length) * (i + 0.5);
+            switch (instruction[i]) {
+                case "-":
+                    continue;
+                case "a":
+                    this.spawner.spawn(new EnemyShip(xPos, yPos));
+                    break;
+                case "b":
+                    this.spawner.spawn(new ReturnerShip(xPos, yPos));
+                    break;
             }
             
-            this.spawner.spawn(new EnemyShip(
-                this.screenDimensions.x + 20,
-                (this.screenDimensions.y / instruction.length) * (i + 0.5)
-            ));
         }
 
         this.threshold = DEFAULT_THRESHOLD;
