@@ -15,7 +15,7 @@ function main() {
 
     const game = new Game(canvas);
     Promise.all([
-        loadImage("img/test-splash.png"),
+        loadImage("img/title.png"),
         loadImage("img/bathroom.png"),
     ]).then(([image1, image2]) => {
         const splash = new SplashScreenStage(screenDimensions, image1, () => {
