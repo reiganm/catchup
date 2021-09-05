@@ -10,7 +10,7 @@ export class EnemyShip extends Gunner {
             -12, -12, 24, 24
         ), {
             bulletAllegiance: "enemy",
-            shotsPerSecond: 2,
+            shotsPerSecond: 0.3,
             shouldRandomizeShootingTimer: true,
         });
 

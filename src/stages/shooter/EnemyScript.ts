@@ -74,7 +74,7 @@ export class EnemyScript {
     }
 
     private spawnEnemies(instruction: string) {
-        for (let i = 0; i <= instruction.length; i++) {
+        for (let i = 0; i < instruction.length; i++) {
             if (instruction[i] === "-") {
                 continue;
             }
