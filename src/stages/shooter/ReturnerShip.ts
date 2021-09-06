@@ -4,13 +4,15 @@ import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
 import { Bullet } from "./Bullet";
 import { Timer } from "../../util/Timer";
+import { elt } from "../../util/elt";
 
 export class ReturnerShip extends Gunner {
     returnTimer: Timer;
+    image: HTMLImageElement;
 
     constructor(x: number, y: number) {
         super(x, y, new BBox(
-            -12, -12, 24, 24
+            -12, -24, 24, 48
         ), {
             bulletAllegiance: "enemy",
             shotsPerSecond: 2,
@@ -29,6 +31,8 @@ export class ReturnerShip extends Gunner {
         });
 
         this.returnTimer.isSleeping = true;
+
+        this.image = elt.image("img/returner.png", () => {}, () => {});
     }
 
     didSpawn() {
@@ -53,5 +57,16 @@ export class ReturnerShip extends Gunner {
         bullet.velocity = this.aimer
             .vectorTowardsPlayer(this.position)
             .scaled(400);
+    }
+
+    render(context: CanvasRenderingContext2D) {
+        const ebbox = this.effectiveBBox;
+        context.drawImage(
+            this.image,
+            Math.floor(ebbox.minX),
+            Math.floor(ebbox.minY)
+        )
+
+        super.render(context);
     }
 }
