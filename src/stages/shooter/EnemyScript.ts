@@ -2,9 +2,13 @@ import { Vector } from "../../util/Vector";
 import { ObjectSpawner } from "./ObjectSpawner"
 import { NibblerShip } from "./NibblerShip";
 import { ReturnerShip } from "./ReturnerShip";
+import { WaverShip } from "./WaverShip";
 
 export const sampleEnemyScript = [
     ":wait_1000",
+    "-c-c-c",
+    ":wait_1000",
+    "c-c-c-",
     "-a----",
     "-a----",
     "-a----",
@@ -90,6 +94,9 @@ export class EnemyScript {
                     break;
                 case "b":
                     this.spawner.spawn(new ReturnerShip(xPos, yPos));
+                    break;
+                case "c":
+                    this.spawner.spawn(new WaverShip(xPos, yPos));
                     break;
             }
             

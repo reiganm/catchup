@@ -52,6 +52,6 @@ export class ReturnerShip extends Gunner {
     setupBullet(bullet: Bullet) {
         bullet.velocity = this.aimer
             .vectorTowardsPlayer(this.position)
-            .scaled(200);
+            .scaled(400);
     }
 }
