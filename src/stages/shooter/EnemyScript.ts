@@ -4,10 +4,14 @@ import { NibblerShip } from "./NibblerShip";
 import { ReturnerShip } from "./ReturnerShip";
 import { WaverShip } from "./WaverShip";
 import { GoliathShip } from "./GoliathShip";
+import { Boss } from "./Boss";
+import { AmyBoss } from "./AmyBoss";
 
 export const sampleEnemyScript = [
     "a-d-a",
     ":wait_1000",
+    ":wait_1000",
+    ":boss amy",
     "-c-c-c",
     ":wait_1000",
     "c-c-c-",
@@ -34,25 +38,37 @@ export const sampleEnemyScript = [
 
 const DEFAULT_THRESHOLD = 250;
 
+type ScriptMode = "normal" | "boss";
+
+export interface GameChanger {
+    completeLevel(): void
+    startBossBattle(boss: Boss, name: string): void
+}
+
 export class EnemyScript {
     spawner: ObjectSpawner;
+    gameChanger: GameChanger
     counter: number;
     threshold: number;
     instructionPointer: number;
     instructions: string[];
     screenDimensions: Vector;
+    mode: ScriptMode;
 
     constructor(
         spawner: ObjectSpawner,
+        gameChanger: GameChanger,
         screenDimensions: Vector,
         instructions: string[]
     ) {
         this.spawner = spawner;
+        this.gameChanger = gameChanger;
         this.counter = 0;
         this.threshold = DEFAULT_THRESHOLD;
         this.instructionPointer = 0;
         this.instructions = instructions;
         this.screenDimensions = screenDimensions;
+        this.mode = "normal";
     }
 
     update(dt: number) {
@@ -60,6 +76,10 @@ export class EnemyScript {
             // TODO: don't leave it like that, it should actually end somewhere...
             this.instructionPointer = 0;
             // return;
+        }
+
+        if (this.mode === "boss") {
+            return;
         }
 
         this.counter += dt;
@@ -71,6 +91,14 @@ export class EnemyScript {
         }
     }
 
+    private spawnBoss(boss: Boss, name: string) {
+        this.spawner.spawn(boss);
+        this.gameChanger.startBossBattle(boss, name);
+        boss.onDestroyed = () => {
+            this.gameChanger.completeLevel();   
+        };
+    }
+
     private executeCommand(name: string, args: string[]) {
         switch (name) {
             case "wait":
@@ -79,6 +107,22 @@ export class EnemyScript {
             case "question":
                 console.log(args);
                 this.threshold = DEFAULT_THRESHOLD;
+                break;
+            case "boss":
+                this.mode = "boss";
+                const xPos = this.screenDimensions.x + 90;
+                const yPos = this.screenDimensions.y / 2;
+                switch (args[0]) {
+                    case "amy":
+                        this.spawnBoss(new AmyBoss(xPos, yPos), "Amy");
+                        break;
+                    case "valac":
+                        //this.spawnBoss(new ValacBoss(xPos, yPos), "Amy");
+                        break;
+                    case "haborym":
+                        //this.spawnBoss(new HaborymBoss(xPos, yPos), "Amy");
+                        break;
+                }
                 break;
         }
         
@@ -118,5 +162,4 @@ export class EnemyScript {
             this.spawnEnemies(instruction);
         }
     }
-    
 }

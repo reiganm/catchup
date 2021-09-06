@@ -4,8 +4,7 @@ import { Vector } from "../util/Vector";
 import { ShooterObject } from "./shooter/ShooterObject";
 import { PlayerShip } from "./shooter/PlayerShip";
 import { Timer } from "../util/Timer";
-import { randomFromRange } from "../util/random";
-import { EnemyScript } from "./shooter/EnemyScript";
+import { EnemyScript, GameChanger } from "./shooter/EnemyScript";
 import { ObjectSpawner } from "./shooter/ObjectSpawner";
 import { Aimer } from "./shooter/Aimer";
 
@@ -75,6 +74,7 @@ export class ShooterStage extends Stage {
 
         this.enemyScript = new EnemyScript(
             this.makeObjectSpawner(),
+            this.makeGameChanger(),
             this.screenDimensions,
             config.enemyScript
         );
@@ -92,6 +92,18 @@ export class ShooterStage extends Stage {
                 stage.removeObject(object);
             }
         };
+    }
+    
+    private makeGameChanger(): GameChanger {
+        const stage = this;
+        return {
+            completeLevel() {
+                // TODO: complete stage and go to next level
+            },
+            startBossBattle() {
+                // TODO: show boss name and health bar 
+            }
+        }
     }
 
     private makeAimer(): Aimer {

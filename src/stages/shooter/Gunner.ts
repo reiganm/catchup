@@ -40,6 +40,7 @@ export class Gunner extends ShooterObject {
         );
     }
 
+    /** Redefine in child if you want special shooting behavior */
     shoot() {
         const gunpoint = this.gunpoint;
         const bullet = new Bullet(

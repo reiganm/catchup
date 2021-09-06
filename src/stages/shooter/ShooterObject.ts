@@ -18,6 +18,7 @@ export class ShooterObject {
     /** Collision group this object will collide to */
     targetCollisionGroup: CollisionGroup;
     isInvincible: boolean;
+    onDestroyed: () => void;
 
     spawner: ObjectSpawner;
     aimer: Aimer;
@@ -66,6 +67,7 @@ export class ShooterObject {
 
     destroy() {
         this.spawner.despawn(this);
+        this.onDestroyed?.();
     }
 
     hurt() {
