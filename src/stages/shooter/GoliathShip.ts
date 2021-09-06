@@ -1,31 +1,33 @@
-import { Bullet } from "./Bullet";
+import { Gunner } from "./Gunner";
 import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
-import { Gunner } from "./Gunner";
+import { Bullet } from "./Bullet";
 import { elt } from "../../util/elt";
 
-export class NibblerShip extends Gunner {
+export class GoliathShip extends Gunner {
     image: HTMLImageElement;
 
     constructor(x: number, y: number) {
         super(x, y, new BBox(
-            -12, -12, 24, 24
+            -24, -24, 48, 48
         ), {
             bulletAllegiance: "enemy",
-            shotsPerSecond: 0.3,
+            shotsPerSecond: 4,
             shouldRandomizeShootingTimer: true,
         });
 
-        this.velocity = new Vector(-200, 0);
+        this.velocity = new Vector(-20, 0);
+        this.hp = 5;
 
         this.collisionGroup = "enemy";
         this.targetCollisionGroup = "player";
-        this.image = elt.image("img/nibbler.png", () => {}, () => {});
+
+        this.image = elt.image("img/goliath.png", () => {}, () => {});
     }
 
-    get gunpoint(): Vector {
-        return new Vector(this.x + 3, this.y + 2);
+    update(dt: number) {
+        super.update(dt);
     }
 
     collideWithObject(player: ShooterObject) {
@@ -35,7 +37,7 @@ export class NibblerShip extends Gunner {
     setupBullet(bullet: Bullet) {
         bullet.velocity = this.aimer
             .vectorTowardsPlayer(this.position)
-            .scaled(100);
+            .scaled(50);
     }
 
     render(context: CanvasRenderingContext2D) {
@@ -44,6 +46,6 @@ export class NibblerShip extends Gunner {
             this.image,
             Math.floor(ebbox.minX),
             Math.floor(ebbox.minY)
-        );
+        )
     }
 }

@@ -45,8 +45,8 @@ export class ReturnerShip extends Gunner {
         super.update(dt);
     }
 
-    collideWithObject(object: ShooterObject) {
-        object.explode();
+    collideWithObject(player: ShooterObject) {
+        player.hurt();
     }
 
     setupBullet(bullet: Bullet) {

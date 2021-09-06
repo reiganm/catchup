@@ -27,8 +27,8 @@ export class WaverShip extends Gunner {
         this.waveTimer = new Timer("repeat", 1000, () => {});
     }
 
-    collideWithObject(object: ShooterObject) {
-        object.explode();
+    collideWithObject(player: ShooterObject) {
+        player.hurt();
     }
 
     get gunpoint(): Vector {

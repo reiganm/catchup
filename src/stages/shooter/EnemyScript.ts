@@ -3,8 +3,10 @@ import { ObjectSpawner } from "./ObjectSpawner"
 import { NibblerShip } from "./NibblerShip";
 import { ReturnerShip } from "./ReturnerShip";
 import { WaverShip } from "./WaverShip";
+import { GoliathShip } from "./GoliathShip";
 
 export const sampleEnemyScript = [
+    "a-d-a",
     ":wait_1000",
     "-c-c-c",
     ":wait_1000",
@@ -97,6 +99,9 @@ export class EnemyScript {
                     break;
                 case "c":
                     this.spawner.spawn(new WaverShip(xPos, yPos));
+                    break;
+                case "d":
+                    this.spawner.spawn(new GoliathShip(xPos, yPos));
                     break;
             }
             

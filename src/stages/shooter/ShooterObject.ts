@@ -12,6 +12,7 @@ export class ShooterObject {
     y: number;
     velocity: Vector;
     localBBox: BBox;
+    hp: number;
     /** Collision group this object belongs to */
     collisionGroup: CollisionGroup;
     /** Collision group this object will collide to */
@@ -29,6 +30,7 @@ export class ShooterObject {
         this.collisionGroup = null;
         this.targetCollisionGroup = null;
         this.isInvincible = false;
+        this.hp = 1;
 
         this.spawner = null;
         this.aimer = null;
@@ -66,8 +68,15 @@ export class ShooterObject {
         this.spawner.despawn(this);
     }
 
-    explode() {
+    hurt() {
         if (this.isInvincible) return;
+        this.hp -= 1; 
+        if (this.hp <= 0) {
+            this.explode();
+        }
+    }
+
+    explode() {
         this.spawner.spawn(
             new Explosion(this.x, this.y, this.localBBox)
         );
