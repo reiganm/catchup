@@ -17,6 +17,7 @@ export class ReturnerShip extends Gunner {
             bulletAllegiance: "enemy",
             shotsPerSecond: 2,
             shouldRandomizeShootingTimer: true,
+            canShootWhenTooFarLeft: false,
         });
 
         this.stopShooting();
@@ -66,7 +67,5 @@ export class ReturnerShip extends Gunner {
             Math.floor(ebbox.minX),
             Math.floor(ebbox.minY)
         )
-
-        super.render(context);
     }
 }

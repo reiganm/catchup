@@ -31,6 +31,7 @@ export class PlayerShip extends Gunner {
             bulletAllegiance: "player",
             shotsPerSecond: 4,
             shouldRandomizeShootingTimer: false,
+            canShootWhenTooFarLeft: true,
         });
 
         this.activeDirections = new Set();

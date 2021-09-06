@@ -17,6 +17,7 @@ export class WaverShip extends Gunner {
             bulletAllegiance: "enemy",
             shotsPerSecond: 1,
             shouldRandomizeShootingTimer: true,
+            canShootWhenTooFarLeft: false,
         });
 
         this.velocity = new Vector(-200, 0);

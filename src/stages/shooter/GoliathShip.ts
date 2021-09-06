@@ -15,6 +15,7 @@ export class GoliathShip extends Gunner {
             bulletAllegiance: "enemy",
             shotsPerSecond: 4,
             shouldRandomizeShootingTimer: true,
+            canShootWhenTooFarLeft: false,
         });
 
         this.velocity = new Vector(-20, 0);

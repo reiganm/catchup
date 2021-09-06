@@ -8,31 +8,28 @@ export type GunnerConfig = {
     bulletAllegiance: BulletAllegiance,
     shotsPerSecond: number,
     shouldRandomizeShootingTimer: boolean,
+    canShootWhenTooFarLeft: boolean,
 };
 
 /** A base class for game objects that can shoot */
 export class Gunner extends ShooterObject {
     private shootingTimer: Timer;
+    private bulletAllegiance: BulletAllegiance;
 
     constructor(x: number, y: number, bbox: BBox, config: GunnerConfig) {
         super(x, y, bbox);
 
         this.shootingTimer = new Timer("repeat", 1000 / config.shotsPerSecond, () => {
-            const gunpoint = this.gunpoint;
-            const bullet = new Bullet(
-                gunpoint.x,
-                gunpoint.y,
-                config.bulletAllegiance
-            );
-
-            this.setupBullet(bullet);
-
-            this.spawner.spawn(bullet);
+            if (this.x > 100 || config.canShootWhenTooFarLeft) {
+                this.shoot();
+            }
         });
 
         if (config.shouldRandomizeShootingTimer) {
             this.shootingTimer.randomizeProgress();
         }
+
+        this.bulletAllegiance = config.bulletAllegiance;
     }
 
     /** Point where bullets are spawned */
@@ -41,6 +38,18 @@ export class Gunner extends ShooterObject {
             this.effectiveBBox.centerX,
             this.effectiveBBox.centerY
         );
+    }
+
+    shoot() {
+        const gunpoint = this.gunpoint;
+        const bullet = new Bullet(
+            gunpoint.x,
+            gunpoint.y,
+            this.bulletAllegiance
+        );
+
+        this.setupBullet(bullet);
+        this.spawner.spawn(bullet);
     }
 
     startShooting() {

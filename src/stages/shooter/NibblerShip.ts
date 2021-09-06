@@ -15,6 +15,7 @@ export class NibblerShip extends Gunner {
             bulletAllegiance: "enemy",
             shotsPerSecond: 0.3,
             shouldRandomizeShootingTimer: true,
+            canShootWhenTooFarLeft: false,
         });
 
         this.velocity = new Vector(-200, 0);
