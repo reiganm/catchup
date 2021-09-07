@@ -6,9 +6,6 @@ import { pickNext } from "../../util/pickNext";
 import { Bullet } from "./Bullet";
 import { Timer } from "../../util/Timer";
 
-const GUNPOINT_1 = { x: 48 - 50, y: 12 - 50 };
-const GUNPOINT_2 = { x: 48 - 50, y: 90 - 50 };
-
 const PATH: Vector[] = [
     new Vector(400 - 50, 50),
     new Vector(50, 50),
@@ -16,7 +13,7 @@ const PATH: Vector[] = [
     new Vector(400 - 50, 300 - 50),
 ];
 
-/** First level boss */
+/** Second level boss */
 export class ValacBoss extends Boss {
     image: HTMLImageElement;
     rotateTimer: Timer;
