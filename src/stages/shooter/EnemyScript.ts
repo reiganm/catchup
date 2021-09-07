@@ -11,7 +11,7 @@ export const sampleEnemyScript = [
     "a-d-a",
     ":wait_1000",
     ":wait_1000",
-    ":boss amy",
+    ":boss_amy",
     "-c-c-c",
     ":wait_1000",
     "c-c-c-",

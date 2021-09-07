@@ -17,6 +17,9 @@ export class Vector {
 
     normalized(): Vector {    
         const measure = this.measure;
+        if (this.isNull) {
+            return new Vector(0, 0);
+        }
 
         return new Vector(
             this.x / measure,

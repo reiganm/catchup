@@ -107,10 +107,10 @@ export class ShooterStage extends Stage {
     }
 
     private makeAimer(): Aimer {
-        const player = this.player;
+        const stage = this;
         return {
             vectorTowardsPlayer(sourcePoint: Vector): Vector {
-                return player.position
+                return stage.player.position
                     .subtracting(sourcePoint)
                     .normalized();
             }     

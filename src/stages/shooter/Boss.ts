@@ -1,15 +1,19 @@
 import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
 import { Gunner, GunnerConfig } from "./Gunner";
+import { ShooterObject } from "./ShooterObject";
 
 export class Boss extends Gunner {
     speed: number;
     destination: Vector;
-    onDestinationReached: (Vector) => void;
 
     constructor(x: number, y: number, bbox: BBox, config: GunnerConfig) {
         super(x, y, bbox, config);
         this.speed = 100;
+        this.destination = new Vector(x, y);
+
+        this.collisionGroup = "enemy";
+        this.targetCollisionGroup = "player";
     }
 
     update(dt: number) {
@@ -21,10 +25,23 @@ export class Boss extends Gunner {
             .normalized()
             .scaled(this.speed * dt / 1000);
 
-        if (path.measure >= direction.measure) {
+        if (path.measure <= direction.measure) {
             this.x = this.destination.x;
             this.y = this.destination.y; 
-            this.onDestinationReached?.(this.destination);
+            this.destinationReached();
+        } else {
+            this.x += direction.x;
+            this.y += direction.y;
         }
+
+        super.update(dt);
+    }
+
+    destinationReached() {
+        // do nothing
+    }
+
+    collideWithObject(player: ShooterObject) {
+        player.hurt();
     }
 }
