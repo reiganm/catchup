@@ -114,7 +114,7 @@ export class EnemyScript {
                 const yPos = this.screenDimensions.y / 2;
                 switch (args[0]) {
                     case "amy":
-                        this.spawnBoss(new AmyBoss(xPos, yPos), "Amy");
+                        this.spawnBoss(new AmyBoss(xPos, yPos), "Tomato Amy");
                         break;
                     case "valac":
                         //this.spawnBoss(new ValacBoss(xPos, yPos), "Amy");

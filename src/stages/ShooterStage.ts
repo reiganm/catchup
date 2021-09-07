@@ -7,6 +7,7 @@ import { Timer } from "../util/Timer";
 import { EnemyScript, GameChanger } from "./shooter/EnemyScript";
 import { ObjectSpawner } from "./shooter/ObjectSpawner";
 import { Aimer } from "./shooter/Aimer";
+import { Boss } from "./shooter/Boss";
 
 type LevelConfig = {
     cameraHeight: number,
@@ -36,6 +37,9 @@ export function enableInvincibilityCheat() {
 export class ShooterStage extends Stage {
     levelConfig: LevelConfig;
     player: PlayerShip;
+    boss: Boss;
+    bossMaxHP: number;
+    bossName: string;
     lives: number;
     isGameOver: boolean;
     objects: ShooterObject[];
@@ -49,6 +53,9 @@ export class ShooterStage extends Stage {
         
         this.levelConfig = config.level;
         this.player = new PlayerShip();
+        this.boss = null;
+        this.bossMaxHP = 0;
+        this.bossName = "Mr. X";
         this.lives = config.lives;
         this.isGameOver = false;
         this.objects = [];
@@ -71,6 +78,7 @@ export class ShooterStage extends Stage {
             this.addObject(this.player);
         });
         this.playerRespawnTimer.isSleeping = true;
+        this.addObject(this.player);
 
         this.enemyScript = new EnemyScript(
             this.makeObjectSpawner(),
@@ -78,8 +86,6 @@ export class ShooterStage extends Stage {
             this.screenDimensions,
             config.enemyScript
         );
-
-        this.addObject(this.player);
     }
 
     private makeObjectSpawner(): ObjectSpawner {
@@ -100,8 +106,10 @@ export class ShooterStage extends Stage {
             completeLevel() {
                 // TODO: complete stage and go to next level
             },
-            startBossBattle() {
-                // TODO: show boss name and health bar 
+            startBossBattle(boss: Boss, name: string) {
+                stage.boss = boss;   
+                stage.bossName = name;
+                stage.bossMaxHP = boss.hp;
             }
         }
     }
@@ -233,6 +241,37 @@ export class ShooterStage extends Stage {
             context.fillText("GAME OVER", this.screenDimensions.x / 2, this.screenDimensions.y / 2, )
             context.textAlign = "left";
         }
+
+        if (this.boss !== null) {
+            this.renderBossHealthbar(context, this.boss, this.bossName);
+        }
+    }
+
+    renderBossHealthbar(context: CanvasRenderingContext2D, boss: Boss, name: string) {
+        context.fillStyle = "white"; 
+        context.strokeStyle = "white";
+
+        context.textAlign = "center";
+        context.fillText(name, this.screenDimensions.x / 2, this.screenDimensions.y - 24);
+        context.textAlign = "left";
+
+        const healthBarPadding = 10;
+        const healthBarHeight = 10;
+        const healthBarWidth = this.screenDimensions.x - healthBarPadding - healthBarPadding;
+
+        context.strokeRect(
+            0.5 + healthBarPadding,
+            0.5 + this.screenDimensions.y - healthBarPadding - healthBarHeight,
+            healthBarWidth,
+            healthBarHeight
+        );
+
+        context.fillRect(
+            0.5 + healthBarPadding,
+            0.5 + this.screenDimensions.y - healthBarPadding - healthBarHeight,
+            0.5 + Math.floor(healthBarWidth * boss.hp / this.bossMaxHP),
+            healthBarHeight
+        );
     }
 
     input(event: GameInputEvent) {
