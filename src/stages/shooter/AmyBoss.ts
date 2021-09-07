@@ -14,16 +14,10 @@ const PATH: Vector[] = [
     new Vector(300, 250),
 ];
 
-enum AmyState {
-    intro = "intro",
-    flyingAround = "flyingAround",
-}
-
 /** First level boss */
 export class AmyBoss extends Boss {
     image: HTMLImageElement;
     currentGunpoint: { x: number, y: number };
-    state: AmyState;
 
     constructor(x: number, y: number) {
         super(x, y, new BBox(

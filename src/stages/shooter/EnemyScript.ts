@@ -6,12 +6,13 @@ import { WaverShip } from "./WaverShip";
 import { GoliathShip } from "./GoliathShip";
 import { Boss } from "./Boss";
 import { AmyBoss } from "./AmyBoss";
+import { ValacBoss } from "./ValacBoss";
 
 export const sampleEnemyScript = [
-    "a-d-a",
+    "a-b-a",
     ":wait_1000",
     ":wait_1000",
-    ":boss_amy",
+    ":boss_valac",
     "-c-c-c",
     ":wait_1000",
     "c-c-c-",
@@ -117,7 +118,7 @@ export class EnemyScript {
                         this.spawnBoss(new AmyBoss(xPos, yPos), "Tomato Amy");
                         break;
                     case "valac":
-                        //this.spawnBoss(new ValacBoss(xPos, yPos), "Amy");
+                        this.spawnBoss(new ValacBoss(xPos, yPos), "Tomato Valac");
                         break;
                     case "haborym":
                         //this.spawnBoss(new HaborymBoss(xPos, yPos), "Amy");

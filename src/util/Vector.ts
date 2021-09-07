@@ -34,6 +34,13 @@ export class Vector {
         );
     }
 
+    rotated(radians: number): Vector {
+        return new Vector(
+            this.x * Math.cos(radians) - this.y * Math.sin(radians),
+            this.x * Math.sin(radians) + this.y * Math.cos(radians)
+        );
+    }
+
     adding(otherVector: Vector): Vector {
         return new Vector(
             otherVector.x + this.x,
