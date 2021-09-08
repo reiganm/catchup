@@ -9,7 +9,7 @@ import { ObjectSpawner } from "./shooter/ObjectSpawner";
 import { Aimer } from "./shooter/Aimer";
 import { Boss } from "./shooter/Boss";
 
-type LevelConfig = {
+export type LevelConfig = {
     cameraHeight: number,
     cameraCenter: number,
     closeness: number,
@@ -18,7 +18,7 @@ type LevelConfig = {
     ambientBrightness: number,
 };
 
-type ShooterStageConfig = {
+export type ShooterStageConfig = {
     background: HTMLImageElement,
     screenDimensions: Vector,
     level: LevelConfig,

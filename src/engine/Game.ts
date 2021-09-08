@@ -74,6 +74,10 @@ export class Game {
         this.stages.pop();
     }
 
+    get hasStages(): boolean {
+        return this.stages.length > 0;
+    }
+
     transition( 
         transitionBuilder: (from: Stage) => Transition,
         transitionType: TransitionType

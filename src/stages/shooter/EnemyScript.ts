@@ -19,7 +19,7 @@ export const sampleEnemyScript = [
     ":wait_1000",
     ":question_Est dva stula_vozmu piki tochenu_prosnus",
     ":wait_1000",
-    ":boss_haborym",
+    ":boss_amy",
     "-c-c-c",
     ":wait_1000",
     "c-c-c-",

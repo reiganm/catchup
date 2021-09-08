@@ -5,7 +5,7 @@ import { elt } from "../util/elt";
 import { loadImage } from "../util/loadImage";
 import { GameInputEvent } from "../engine/GameInputEvent";
 
-type SceneDefinition = {
+export type SceneDefinition = {
     imageSrc: string,
     dialogues: string[]
 }
