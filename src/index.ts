@@ -101,6 +101,7 @@ type LevelDefinition = {
     introCutscene: SceneDefinition[]
     enemyScript: string[]
     musicSrc: string
+    bossMusicSrc: string
 };
 
 class Jukebox {
@@ -170,15 +171,21 @@ class GameController {
     }
 
     private playLevel(
-        config: ShooterStageConfig 
+        config: ShooterStageConfig,
+        bossMusic: HTMLAudioElement
     ): Promise<{
         result: ShooterStageCompleteResult,
         remainingLives: number
     }> {
         return new Promise((resolve) => {
-            const shooter = new ShooterStage(config, (result) => {
-                resolve({ result, remainingLives: shooter.lives });
-            });
+            const shooter = new ShooterStage(
+                config,
+                () => {
+                    this.jukebox.playMusic(bossMusic);
+                },
+                (result) => {
+                    resolve({ result, remainingLives: shooter.lives });
+                });
             this.fadeInto(shooter, 200);
         });
     }
@@ -214,10 +221,10 @@ class GameController {
                     await this.showLoadingScreen();
                     const background = await loadImage(level.shooterBackgroundSrc);
                     const music = await loadAudio(level.musicSrc);
+                    const bossMusic = await loadAudio(level.bossMusicSrc);
                     const shotSound = await loadAudio("snd/shot.wav");
                     const explosionSound = await loadAudio("snd/explosion.wav");
                     this.jukebox.playMusic(music);
-                    const jukebox = this.jukebox; 
                     const result = await this.playLevel({
                         background,
                         screenDimensions: SCREEN_DIMENSIONS,
@@ -236,7 +243,7 @@ class GameController {
                                 explosionSound.play();
                             }
                         }
-                    }); 
+                    }, bossMusic); 
                     if (result.result === "victory") {
                         lives = result.remainingLives;
                         break;
@@ -287,6 +294,7 @@ const FINAL_CUTSCENE: SceneDefinition[] = [{
 const LEVELS: LevelDefinition[] = [{
     introCutscene: TEST_CUTSCENE,
     musicSrc: "music/level1.mp3",
+    bossMusicSrc: "music/boss.mp3",
     shooterBackgroundSrc: "img/test-scene-1.png",
     levelConfig: {
         cameraHeight: 20,
@@ -300,6 +308,7 @@ const LEVELS: LevelDefinition[] = [{
 }, {
     introCutscene: TEST_CUTSCENE,
     musicSrc: "music/level2.mp3",
+    bossMusicSrc: "music/boss.mp3",
     shooterBackgroundSrc: "img/bathroom.png",
     levelConfig: {
         cameraHeight: 20,

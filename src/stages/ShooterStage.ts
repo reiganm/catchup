@@ -54,9 +54,11 @@ export class ShooterStage extends Stage {
     enemyScript: EnemyScript;
     questionText: string;
     onStageComplete: (result: ShooterStageCompleteResult) => void
+    onBossBattle: () => void;
 
     constructor(
         config: ShooterStageConfig,
+        onBossBattle: () => void,
         onStageComplete: (result: ShooterStageCompleteResult) => void
     ) {
         super(config.screenDimensions);
@@ -98,6 +100,7 @@ export class ShooterStage extends Stage {
             config.enemyScript
         );
         this.questionText = null;
+        this.onBossBattle = onBossBattle;
         this.onStageComplete = onStageComplete;
     }
 
@@ -123,6 +126,7 @@ export class ShooterStage extends Stage {
                 stage.boss = boss;   
                 stage.bossName = name;
                 stage.bossMaxHP = boss.hp;
+                stage.onBossBattle();
             },
             showQuestion(text: string) {
                 stage.questionText = text;
