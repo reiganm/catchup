@@ -9,7 +9,7 @@ export class LoadingStage extends Stage {
         context.font = "8px amiga4ever";
         context.textAlign = "center";
         context.fillText(
-            "LOADING...",
+            "PURR-REPARE YOURSELF...",
             this.screenDimensions.x / 2,
             this.screenDimensions.y / 2
         );

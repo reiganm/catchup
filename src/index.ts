@@ -214,13 +214,25 @@ class GameController {
                     await this.showLoadingScreen();
                     const background = await loadImage(level.shooterBackgroundSrc);
                     const music = await loadAudio(level.musicSrc);
+                    const shotSound = await loadAudio("snd/shot.wav");
                     this.jukebox.playMusic(music);
+                    const jukebox = this.jukebox; 
                     const result = await this.playLevel({
                         background,
                         screenDimensions: SCREEN_DIMENSIONS,
                         level: level.levelConfig,
                         lives,
-                        enemyScript: level.enemyScript
+                        enemyScript: level.enemyScript,
+                        noisemaker: {
+                            playShotSound() {
+                                shotSound.pause();
+                                shotSound.currentTime = 0;
+                                shotSound.play();
+                            },
+                            playExplosionSound() {
+                                // TODO: play explosion sound
+                            }
+                        }
                     }); 
                     if (result.result === "victory") {
                         lives = result.remainingLives;
@@ -252,7 +264,7 @@ const FINAL_CUTSCENE: SceneDefinition[] = [{
 }, {
     imageSrc: "img/test-scene-1.png",
     dialogues: [
-        `NEWS FLASH: Interrogator kills a tomato incident suspect! Investigation suggests personal motives.`,
+        `NEWSFLASH: Interrogator kills a tomato incident suspect! Investigation suggests personal motives.`,
         `Five baby tomatoes end up in orphanage!`,
         `Protesters demand stricter mental check-ups for police officers!`,
     ],

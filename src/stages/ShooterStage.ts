@@ -8,6 +8,7 @@ import { EnemyScript, GameChanger } from "./shooter/EnemyScript";
 import { ObjectSpawner } from "./shooter/ObjectSpawner";
 import { Aimer } from "./shooter/Aimer";
 import { Boss } from "./shooter/Boss";
+import { Noisemaker } from "./shooter/NoiseMaker";
 
 export type LevelConfig = {
     cameraHeight: number,
@@ -23,6 +24,7 @@ export type ShooterStageConfig = {
     screenDimensions: Vector,
     level: LevelConfig,
     lives: number;
+    noisemaker: Noisemaker;
     enemyScript: string[]
 };
 
@@ -37,6 +39,7 @@ export function enableInvincibilityCheat() {
 export type ShooterStageCompleteResult = "gameover" | "victory";
 
 export class ShooterStage extends Stage {
+    noisemaker: Noisemaker;
     levelConfig: LevelConfig;
     player: PlayerShip;
     boss: Boss;
@@ -58,6 +61,7 @@ export class ShooterStage extends Stage {
     ) {
         super(config.screenDimensions);
         
+        this.noisemaker = config.noisemaker;
         this.levelConfig = config.level;
         this.player = new PlayerShip();
         this.boss = null;
@@ -144,6 +148,7 @@ export class ShooterStage extends Stage {
         this.objects.push(object);
         object.spawner = this.makeObjectSpawner();
         object.aimer = this.makeAimer();
+        object.noisemaker = this.noisemaker;
         object.didSpawn();
     }
 

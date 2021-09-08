@@ -3,6 +3,7 @@ import { Vector } from "../../util/Vector";
 import { BBox } from "../../util/BBox";
 import { ObjectSpawner } from "./ObjectSpawner";
 import { Timer } from "../../util/Timer";
+import { Noisemaker } from "./NoiseMaker";
 
 type CollisionGroup = "enemy" | "player" | "enemybullet" | "playerbullet";
 
@@ -22,6 +23,7 @@ export class ShooterObject {
 
     spawner: ObjectSpawner;
     aimer: Aimer;
+    noisemaker: Noisemaker;
 
     constructor(x: number, y: number, bbox: BBox) {
         this.x = x;
@@ -35,6 +37,7 @@ export class ShooterObject {
 
         this.spawner = null;
         this.aimer = null;
+        this.noisemaker = null;
     }
 
     get position(): Vector {

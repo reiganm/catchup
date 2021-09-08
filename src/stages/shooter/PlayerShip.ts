@@ -126,4 +126,9 @@ export class PlayerShip extends Gunner {
             Math.floor(ebbox.minY - 3)
         );
     }
+
+    shoot() {
+        super.shoot();
+        this.noisemaker?.playShotSound();
+    }
 }
