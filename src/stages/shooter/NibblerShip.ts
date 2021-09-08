@@ -4,6 +4,7 @@ import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
 import { Gunner } from "./Gunner";
 import { elt } from "../../util/elt";
+import { ImageLibrary } from "../../ImageLibrary";
 
 export class NibblerShip extends Gunner {
     image: HTMLImageElement;
@@ -22,7 +23,7 @@ export class NibblerShip extends Gunner {
 
         this.collisionGroup = "enemy";
         this.targetCollisionGroup = "player";
-        this.image = elt.image("img/nibbler.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.nibbler;
     }
 
     get gunpoint(): Vector {

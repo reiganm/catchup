@@ -1,3 +1,4 @@
+import { ImageLibrary } from "../../ImageLibrary";
 import { BBox } from "../../util/BBox";
 import { elt } from "../../util/elt";
 import { Timer } from "../../util/Timer";
@@ -45,7 +46,7 @@ export class PlayerShip extends Gunner {
         this.stopShooting();
 
         this.collisionGroup = "player";
-        this.image = elt.image("img/cat.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.cat;
     }
 
     get gunpoint(): Vector {

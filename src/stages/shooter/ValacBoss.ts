@@ -5,6 +5,7 @@ import { Vector } from "../../util/Vector";
 import { pickNext } from "../../util/pickNext";
 import { Bullet } from "./Bullet";
 import { Timer } from "../../util/Timer";
+import { ImageLibrary } from "../../ImageLibrary";
 
 const PATH: Vector[] = [
     new Vector(400 - 50, 50),
@@ -31,7 +32,7 @@ export class ValacBoss extends Boss {
 
         this.hp = 130;
 
-        this.image = elt.image("img/boss2.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.boss2;
         this.rotateTimer = new Timer("repeat", 333, () => {});
         this.gunRotateTimer = new Timer("repeat", 1000, () => {});
     }

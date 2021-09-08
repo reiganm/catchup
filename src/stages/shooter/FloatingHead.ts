@@ -1,3 +1,4 @@
+import { ImageLibrary } from "../../ImageLibrary";
 import { BBox } from "../../util/BBox";
 import { elt } from "../../util/elt";
 import { Vector } from "../../util/Vector";
@@ -19,7 +20,7 @@ export class FloatingHead extends ShooterObject {
         this.initialXPos = x;
         this.didArriveToDestination = false;
         this.onArrivedToDestination = onArrivedToDestination;
-        this.image = elt.image("img/cathead.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.cathead;
     }
 
     update(dt: number) {

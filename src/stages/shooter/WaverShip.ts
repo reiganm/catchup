@@ -5,6 +5,7 @@ import { ShooterObject } from "./ShooterObject";
 import { Gunner } from "./Gunner";
 import { elt } from "../../util/elt";
 import { Timer } from "../../util/Timer";
+import { ImageLibrary } from "../../ImageLibrary";
 
 export class WaverShip extends Gunner {
     image: HTMLImageElement;
@@ -24,7 +25,7 @@ export class WaverShip extends Gunner {
 
         this.collisionGroup = "enemy";
         this.targetCollisionGroup = "player";
-        this.image = elt.image("img/waver.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.waver;
         this.waveTimer = new Timer("repeat", 1000, () => {});
     }
 

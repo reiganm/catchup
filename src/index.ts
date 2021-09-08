@@ -16,6 +16,7 @@ import { enableInvincibilityCheat } from "./stages/ShooterStage";
 import { Stage } from "./engine/Stage";
 import { Transition } from "./engine/Transition";
 import { LoadingStage } from "./stages/LoadingStage";
+import { ImageLibrary } from "./ImageLibrary";
 
 const CREDITS: string[] = [
     `CAT-CHING IS A CAT THING`,
@@ -207,6 +208,7 @@ class GameController {
         while (true) {
             await this.playSplash("img/quote.png");
             await this.showLoadingScreen();
+            await ImageLibrary.instance.loadImages();
             const audio = await loadAudio("music/title.mp3");
             this.jukebox.playMusic(audio);
             await this.playSplash("img/title.png");

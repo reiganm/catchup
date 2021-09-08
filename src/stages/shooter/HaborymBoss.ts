@@ -4,6 +4,7 @@ import { elt } from "../../util/elt";
 import { Vector } from "../../util/Vector";
 import { pickNext } from "../../util/pickNext";
 import { Bullet } from "./Bullet";
+import { ImageLibrary } from "../../ImageLibrary";
 
 const PATH: Vector[] = [
     new Vector(400, 150),
@@ -28,7 +29,7 @@ export class HaborymBoss extends Boss {
         this.hp = 1000;
         this.speed = 5;
 
-        this.image = elt.image("img/boss3.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.boss3;
     }
 
     get gunpoint(): Vector {

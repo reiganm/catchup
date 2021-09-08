@@ -4,6 +4,7 @@ import { elt } from "../../util/elt";
 import { Vector } from "../../util/Vector";
 import { pickNext } from "../../util/pickNext";
 import { Bullet } from "./Bullet";
+import { ImageLibrary } from "../../ImageLibrary";
 
 const GUNPOINT_1 = { x: 48 - 50, y: 12 - 50 };
 const GUNPOINT_2 = { x: 48 - 50, y: 90 - 50 };
@@ -31,7 +32,7 @@ export class AmyBoss extends Boss {
 
         this.hp = 100;
 
-        this.image = elt.image("img/boss1.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.boss1;
         this.currentGunpoint = GUNPOINT_1;
     }
 

@@ -4,6 +4,7 @@ import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
 import { Bullet } from "./Bullet";
 import { elt } from "../../util/elt";
+import { ImageLibrary } from "../../ImageLibrary";
 
 export class GoliathShip extends Gunner {
     image: HTMLImageElement;
@@ -24,7 +25,7 @@ export class GoliathShip extends Gunner {
         this.collisionGroup = "enemy";
         this.targetCollisionGroup = "player";
 
-        this.image = elt.image("img/goliath.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.goliath;
     }
 
     update(dt: number) {

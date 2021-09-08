@@ -5,6 +5,7 @@ import { ShooterObject } from "./ShooterObject";
 import { Bullet } from "./Bullet";
 import { Timer } from "../../util/Timer";
 import { elt } from "../../util/elt";
+import { ImageLibrary } from "../../ImageLibrary";
 
 export class ReturnerShip extends Gunner {
     returnTimer: Timer;
@@ -33,7 +34,7 @@ export class ReturnerShip extends Gunner {
 
         this.returnTimer.isSleeping = true;
 
-        this.image = elt.image("img/returner.png", () => {}, () => {});
+        this.image = ImageLibrary.instance.returner;
     }
 
     didSpawn() {

@@ -4,6 +4,7 @@ import { Vector } from "../util/Vector";
 import { elt } from "../util/elt";
 import { loadImage } from "../util/loadImage";
 import { GameInputEvent } from "../engine/GameInputEvent";
+import { ImageLibrary } from "../ImageLibrary";
 
 export type SceneDefinition = {
     imageSrc: string,
@@ -45,7 +46,7 @@ export class CutsceneStage extends Stage {
         this.currentDialogueIndex = 0;
         this.imageHorizontalOffset = 0;
         this.currentImage = null;
-        this.promptImage = elt.image("img/prompt.png", () => {}, () => {});
+        this.promptImage = ImageLibrary.instance.prompt;
         this.onCutsceneFinished = onCutsceneFinished;
         this.dialogueTimer = null;
         this.promptTimer = new Timer("repeat", 500, () => {});
