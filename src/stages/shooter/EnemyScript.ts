@@ -8,10 +8,16 @@ import { Boss } from "./Boss";
 import { AmyBoss } from "./AmyBoss";
 import { ValacBoss } from "./ValacBoss";
 import { HaborymBoss } from "./HaborymBoss";
+import { FloatingHead } from "./FloatingHead";
+import { Answer } from "./Answer";
 
 export const sampleEnemyScript = [
     "a-b-a",
+    ":question_Meow, Tom, is your girlfriend coming?_ummm_Y-yeah! Any moment now...",
     ":wait_1000",
+    "a-b-a",
+    ":wait_1000",
+    ":question_Est dva stula_vozmu piki tochenu_prosnus",
     ":wait_1000",
     ":boss_haborym",
     "-c-c-c",
@@ -35,16 +41,17 @@ export const sampleEnemyScript = [
     "-a--a-",
     "a----a",
     ":wait_1000",
-    ":question_Meow, Tom, is your girlfriend coming?_ummm_Y-yeah! Any moment now...",
 ];
 
 const DEFAULT_THRESHOLD = 250;
 
-type ScriptMode = "normal" | "boss";
+type ScriptMode = "normal" | "halt";
 
 export interface GameChanger {
     completeLevel(): void
     startBossBattle(boss: Boss, name: string): void
+    showQuestion(text: string): void
+    hideQuestion(): void
 }
 
 export class EnemyScript {
@@ -80,7 +87,7 @@ export class EnemyScript {
             // return;
         }
 
-        if (this.mode === "boss") {
+        if (this.mode === "halt") {
             return;
         }
 
@@ -107,11 +114,36 @@ export class EnemyScript {
                 this.threshold = Number(args[0]);
                 break;
             case "question":
-                console.log(args);
+                this.mode = "halt";
+                const [question, answerText1, answerText2] = args;
+                const head = new FloatingHead(
+                    this.screenDimensions.x + 90,
+                    this.screenDimensions.y / 2,
+                    () => {
+                        this.gameChanger.showQuestion(question);
+                        const answer1 = new Answer(head.x, head.y - 100, answerText1);
+                        const answer2 = new Answer(head.x, head.y + 100, answerText2);
+
+                        const onDestroyed = () => {
+                            this.spawner.despawn(head);
+                            this.spawner.despawn(answer1);
+                            this.spawner.despawn(answer2);
+                            this.mode = "normal";
+                            this.gameChanger.hideQuestion();
+                        }
+
+                        answer1.onDestroyed = onDestroyed;
+                        answer2.onDestroyed = onDestroyed;
+
+                        this.spawner.spawn(answer1);
+                        this.spawner.spawn(answer2);
+                    }
+                )
+                this.spawner.spawn(head);
                 this.threshold = DEFAULT_THRESHOLD;
                 break;
             case "boss":
-                this.mode = "boss";
+                this.mode = "halt";
                 const xPos = this.screenDimensions.x + 90;
                 const yPos = this.screenDimensions.y / 2;
                 switch (args[0]) {
@@ -125,6 +157,7 @@ export class EnemyScript {
                         this.spawnBoss(new HaborymBoss(xPos, yPos), "Tomato Haborym");
                         break;
                 }
+                this.threshold = DEFAULT_THRESHOLD;
                 break;
         }
         
@@ -150,10 +183,7 @@ export class EnemyScript {
                     this.spawner.spawn(new GoliathShip(xPos, yPos));
                     break;
             }
-            
         }
-
-        this.threshold = DEFAULT_THRESHOLD;
     }
 
     private executeInstruction(instruction: string) {
@@ -162,6 +192,7 @@ export class EnemyScript {
             this.executeCommand(name, args);
         } else {
             this.spawnEnemies(instruction);
+            this.threshold = DEFAULT_THRESHOLD;
         }
     }
 }

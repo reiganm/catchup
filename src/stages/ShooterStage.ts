@@ -34,6 +34,8 @@ export function enableInvincibilityCheat() {
     isInvincibilityCheatOn = true;
 }
 
+export type ShooterStageCompleteResult = "gameover" | "victory";
+
 export class ShooterStage extends Stage {
     levelConfig: LevelConfig;
     player: PlayerShip;
@@ -47,8 +49,13 @@ export class ShooterStage extends Stage {
     backgroundScrollTimer: Timer;
     playerRespawnTimer: Timer;
     enemyScript: EnemyScript;
+    questionText: string;
+    onStageComplete: (result: ShooterStageCompleteResult) => void
 
-    constructor(config: ShooterStageConfig) {
+    constructor(
+        config: ShooterStageConfig,
+        onStageComplete: (result: ShooterStageCompleteResult) => void
+    ) {
         super(config.screenDimensions);
         
         this.levelConfig = config.level;
@@ -86,6 +93,8 @@ export class ShooterStage extends Stage {
             this.screenDimensions,
             config.enemyScript
         );
+        this.questionText = null;
+        this.onStageComplete = onStageComplete;
     }
 
     private makeObjectSpawner(): ObjectSpawner {
@@ -104,12 +113,18 @@ export class ShooterStage extends Stage {
         const stage = this;
         return {
             completeLevel() {
-                // TODO: complete stage and go to next level
+                stage.onStageComplete("victory");
             },
             startBossBattle(boss: Boss, name: string) {
                 stage.boss = boss;   
                 stage.bossName = name;
                 stage.bossMaxHP = boss.hp;
+            },
+            showQuestion(text: string) {
+                stage.questionText = text;
+            },
+            hideQuestion() {
+                stage.questionText = null; 
             }
         }
     }
@@ -244,6 +259,16 @@ export class ShooterStage extends Stage {
 
         if (this.boss !== null) {
             this.renderBossHealthbar(context, this.boss, this.bossName);
+        }
+
+        if (this.questionText !== null) {
+            context.textAlign = "center";
+            context.fillText(
+                this.questionText,
+                this.screenDimensions.x / 2,
+                this.screenDimensions.y / 2 - 25
+            );
+            context.textAlign = "left";
         }
     }
 

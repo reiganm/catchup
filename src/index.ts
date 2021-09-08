@@ -51,6 +51,8 @@ function main() {
                     },
                     enemyScript: sampleEnemyScript,
                     lives: 9,
+                }, (result) => {
+                    console.log("wow cool", result); 
                 });
 
                 game.transition((stage) => {
