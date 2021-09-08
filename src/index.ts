@@ -15,6 +15,7 @@ import { sampleEnemyScript } from "./stages/shooter/EnemyScript";
 import { enableInvincibilityCheat } from "./stages/ShooterStage";
 import { Stage } from "./engine/Stage";
 import { Transition } from "./engine/Transition";
+import { LoadingStage } from "./stages/LoadingStage";
 
 const CREDITS: string[] = [
     `CAT-CHING IS A CAT THING`,
@@ -99,6 +100,7 @@ type LevelDefinition = {
     levelConfig: LevelConfig
     introCutscene: SceneDefinition[]
     enemyScript: string[]
+    musicSrc: string
 };
 
 class Jukebox {
@@ -113,14 +115,14 @@ class Jukebox {
             return;
         }
 
-        this.currentMusic.pause();
         this.currentMusic.currentTime = 0;
+        this.currentMusic.pause();
     }
 
     playMusic(audio: HTMLAudioElement) {
         this.stopMusic();
         audio.loop = true;
-        audio.pause();
+        audio.play();
         this.currentMusic = audio;
     }
 }
@@ -143,13 +145,18 @@ class GameController {
         this.finalCutscene = finalCutscene;
     }
 
-    private fadeInto(toStage: Stage, duration: number) {
+    private showLoadingScreen(): Promise<void> {
+        return this.fadeInto(new LoadingStage(SCREEN_DIMENSIONS), 200);
+    }
+
+    private fadeInto(toStage: Stage, duration: number): Promise<void> {
         if (this.game.hasStages) {
-            this.game.transition((fromStage) => {
-                return new FadeTransition(fromStage, toStage, duration, SCREEN_DIMENSIONS);
+            return this.game.transition((fromStage) => {
+                return new FadeTransition(fromStage, toStage, duration, SCREEN_DIMENSIONS, "black");
             }, "replace");
         } else {
             this.game.pushStage(toStage);
+            return Promise.resolve();
         }
     }
 
@@ -172,7 +179,7 @@ class GameController {
             const shooter = new ShooterStage(config, (result) => {
                 resolve({ result, remainingLives: shooter.lives });
             });
-            this.fadeInto(shooter, 1000);
+            this.fadeInto(shooter, 200);
         });
     }
 
@@ -183,7 +190,7 @@ class GameController {
             .then((image) => {
                 return new Promise((resolve) => {
                     const splash = new SplashScreenStage(SCREEN_DIMENSIONS, image, resolve);
-                    this.fadeInto(splash, 1000);
+                    this.fadeInto(splash, 200);
                 });
             });
     }
@@ -191,15 +198,23 @@ class GameController {
     async playGame() {
         this.game.run(10);
         while (true) {
+            await this.playSplash("img/quote.png");
+            await this.showLoadingScreen();
             const audio = await loadAudio("music/title.mp3");
             this.jukebox.playMusic(audio);
             await this.playSplash("img/title.png");
             for (const level of this.levels) {
+                await this.showLoadingScreen();
+                const cutsceneMusic = await loadAudio("music/cutscene.mp3");
+                this.jukebox.playMusic(cutsceneMusic);
                 await this.playCutscene(level.introCutscene);
 
                 let lives = 9;
                 while (true) {
+                    await this.showLoadingScreen();
                     const background = await loadImage(level.shooterBackgroundSrc);
+                    const music = await loadAudio(level.musicSrc);
+                    this.jukebox.playMusic(music);
                     const result = await this.playLevel({
                         background,
                         screenDimensions: SCREEN_DIMENSIONS,
@@ -225,13 +240,6 @@ const TEST_CUTSCENE: SceneDefinition[] = [{
     dialogues: [
         "meow meow meow",
     ]
-}, {
-    imageSrc: "img/test-scene-2.png",
-    dialogues: [
-        "this should scroll from left to right",
-        "it looks cool that way",
-        "if it doesn't, you probably need to make it scroll, meow...",
-    ]
 }];
 
 const FINAL_CUTSCENE: SceneDefinition[] = [{
@@ -245,7 +253,7 @@ const FINAL_CUTSCENE: SceneDefinition[] = [{
     imageSrc: "img/test-scene-1.png",
     dialogues: [
         `NEWS FLASH: Interrogator kills a tomato incident suspect! Investigation suggests personal motives.`,
-        `Five baby tomatoes go to orphanage!`,
+        `Five baby tomatoes end up in orphanage!`,
         `Protesters demand stricter mental check-ups for police officers!`,
     ],
 }, {
@@ -259,7 +267,8 @@ const FINAL_CUTSCENE: SceneDefinition[] = [{
 }];
 
 const LEVELS: LevelDefinition[] = [{
-    introCutscene: FINAL_CUTSCENE,
+    introCutscene: TEST_CUTSCENE,
+    musicSrc: "music/level1.mp3",
     shooterBackgroundSrc: "img/test-scene-1.png",
     levelConfig: {
         cameraHeight: 20,
@@ -272,6 +281,7 @@ const LEVELS: LevelDefinition[] = [{
     enemyScript: sampleEnemyScript
 }, {
     introCutscene: TEST_CUTSCENE,
+    musicSrc: "music/level2.mp3",
     shooterBackgroundSrc: "img/bathroom.png",
     levelConfig: {
         cameraHeight: 20,
@@ -289,7 +299,7 @@ function main() {
     document.body.appendChild(canvas);
 
     const game = new Game(canvas);
-    const controller = new GameController(game, new Jukebox(), LEVELS, TEST_CUTSCENE);
+    const controller = new GameController(game, new Jukebox(), LEVELS, FINAL_CUTSCENE);
 
     controller.playGame();
 }

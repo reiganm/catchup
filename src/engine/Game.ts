@@ -81,7 +81,7 @@ export class Game {
     transition( 
         transitionBuilder: (from: Stage) => Transition,
         transitionType: TransitionType
-    ) {
+    ): Promise<void> {
         if (this.currentTransition !== null) {
             throw TypeError("transition already in progress, can't initiate a new one");
         }
@@ -90,12 +90,15 @@ export class Game {
         const transition = transitionBuilder(fromStage);
         this.stages.push(transition);
 
-        transition.onFinished = () => {
-            this.popFrontStage();
-            this.pushStage(transition.toStage);
+        return new Promise((resolve) => {
+            transition.onFinished = () => {
+                this.popFrontStage();
+                this.pushStage(transition.toStage);
 
-            this.currentTransition = null;
-        };
+                this.currentTransition = null;
+                resolve();
+            };
+        });
     }
 
     run(updateInterval: number) {
