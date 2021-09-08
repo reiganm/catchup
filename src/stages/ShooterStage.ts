@@ -345,6 +345,9 @@ export class ShooterStage extends Stage {
             case " ":
                 if (event.state === "down") {
                     this.player.startShooting();
+                    if (this.isGameOver) {
+                        this.onStageComplete("gameover");
+                    }
                 } else if (event.state === "up") {
                     this.player.stopShooting();
                 }

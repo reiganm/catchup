@@ -245,6 +245,9 @@ class GameController {
                     }
                 }
             }
+            await this.showLoadingScreen();
+            const endingMusic = await loadAudio("music/ending.mp3");
+            this.jukebox.playMusic(endingMusic);
             await this.playCutscene(this.finalCutscene);
         }
     }
