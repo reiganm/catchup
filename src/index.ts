@@ -11,10 +11,74 @@ import { CutsceneStage, SceneDefinition } from "./stages/CutsceneStage";
 import { FadeTransition } from "./transitions/FadeTransition";
 import { Vector } from "./util/Vector";
 import { loadImage } from "./util/loadImage";
-import { EnemyScript, sampleEnemyScript } from "./stages/shooter/EnemyScript";
+import { sampleEnemyScript } from "./stages/shooter/EnemyScript";
 import { enableInvincibilityCheat } from "./stages/ShooterStage";
 import { Stage } from "./engine/Stage";
 import { Transition } from "./engine/Transition";
+
+const CREDITS: string[] = [
+    `CAT-CHING IS A CAT THING`,
+    ``,
+    ``,
+    `Written and Directed by`,
+    `Maria Reigan`,
+    ``,
+    ``,
+    `Music`,
+    ``,
+    `Title Screen theme`,
+    `"Street Life :Crusaders"`,
+    `by`,
+    `lasombra`,
+    ``,
+    `Level 1 theme`,
+    `"No Jazz"`,
+    `by`,
+    `asikwus`,
+    ``,
+    `Level 2 theme`,
+    `"Satisfaccion"`,
+    `by`,
+    `K. Jose`,
+    ``,
+    `Level 3 theme`,
+    `"The ARYX Experience"`,
+    `by`,
+    `Katie Cadet`,
+    ``,
+    `Boss Battle theme`,
+    `"Go emergency"`,
+    `by`,
+    `The GMC`,
+    ``,
+    `Boss Battle theme`,
+    `"Additional Discomfort"`,
+    `by`,
+    `Pip Malt`,
+    ``,
+    `Ending theme`,
+    `"Mr Pat's Cat"`,
+    `by`,
+    `lemonade`,
+    ``,
+    ``,
+    `Tomato Valac designed by`,
+    `Mishuy from pngtree.com`,
+    ``,
+    ``,
+    `This silly little game was`,
+    `developed in September of 2021`,
+    `for Narrative Driven Jam #4`,
+    ``,
+    ``,
+    ``,
+    ``,
+    ``,
+    ``,
+    ``,
+    ``,
+    `Thank you for playing!`,
+]
 
 const SCREEN_DIMENSIONS = new Vector(400, 300);
 
@@ -134,25 +198,62 @@ const TEST_CUTSCENE: SceneDefinition[] = [{
     ]
 }];
 
+const FINAL_CUTSCENE: SceneDefinition[] = [{
+    imageSrc: "img/test-scene-2.png",
+    dialogues: [
+        `In a moment of inexplicable rage, detective Tom Catchup suddenly pounces at the suspect tomato and smashes it!`,
+        `"Oh no!" Tom exclaims as he sees the deadly injured vegetable. "This is probably very illegal."`,
+        `"As a police officer, I'm not supposed to smash suspects with my mighty paw. I truly have turned into a Tomato Hating Monster."`,
+    ],
+}, {
+    imageSrc: "img/test-scene-1.png",
+    dialogues: [
+        `NEWS FLASH: Interrogator kills a tomato incident suspect! Investigation suggests personal motives.`,
+        `Five baby tomatoes go to orphanage!`,
+        `Protesters demand stricter mental check-ups for police officers!`,
+    ],
+}, {
+    imageSrc: "img/test-scene-2.png",
+    dialogues: [
+        `Today former cat detective Tom Catchup serves a life sentence for the first degree murder.`,
+        `"I don't regret anything! I hate tomatoes! Screw tomatoes!"`,
+        `What a horrible person! Thanks to you, he's got what he deserved.`,
+        `                    THE END`,
+    ],
+}];
+
+const LEVELS: LevelDefinition[] = [{
+    introCutscene: FINAL_CUTSCENE,
+    shooterBackgroundSrc: "img/test-scene-1.png",
+    levelConfig: {
+        cameraHeight: 20,
+        cameraCenter: 200,
+        closeness: 10,
+        ceilHeight: 90,
+        totalHeight: 300,
+        ambientBrightness: 0.2,
+    },
+    enemyScript: sampleEnemyScript
+}, {
+    introCutscene: TEST_CUTSCENE,
+    shooterBackgroundSrc: "img/bathroom.png",
+    levelConfig: {
+        cameraHeight: 20,
+        cameraCenter: 200,
+        closeness: 10,
+        ceilHeight: 90,
+        totalHeight: 300,
+        ambientBrightness: 0.2,
+    },
+    enemyScript: sampleEnemyScript
+}];
 
 function main() {
     const canvas = elt.canvas(SCREEN_DIMENSIONS.x, SCREEN_DIMENSIONS.y);
     document.body.appendChild(canvas);
 
     const game = new Game(canvas);
-    const controller = new GameController(game, [{
-        introCutscene: TEST_CUTSCENE,
-        shooterBackgroundSrc: "img/bathroom.png",
-        levelConfig: {
-            cameraHeight: 20,
-            cameraCenter: 200,
-            closeness: 10,
-            ceilHeight: 90,
-            totalHeight: 300,
-            ambientBrightness: 0.2,
-        },
-        enemyScript: sampleEnemyScript
-    }], TEST_CUTSCENE);
+    const controller = new GameController(game, LEVELS, TEST_CUTSCENE);
 
     controller.playGame();
 }
