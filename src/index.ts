@@ -87,6 +87,13 @@ Object.defineProperty(window, "CATMODE", { get() {
     return "The cat now has infinite lives.";
 }});
 
+function loadAudio(src: string): Promise<HTMLAudioElement> {
+    return new Promise((resolve) => {
+        const audio = new Audio(src);
+        audio.addEventListener("canplaythrough", () => resolve(audio));
+    });
+}
+
 type LevelDefinition = {
     shooterBackgroundSrc: string
     levelConfig: LevelConfig
@@ -94,17 +101,44 @@ type LevelDefinition = {
     enemyScript: string[]
 };
 
+class Jukebox {
+    currentMusic: HTMLAudioElement;
+
+    constructor() {
+        this.currentMusic = null;
+    }
+
+    stopMusic() {
+        if (this.currentMusic === null) {
+            return;
+        }
+
+        this.currentMusic.pause();
+        this.currentMusic.currentTime = 0;
+    }
+
+    playMusic(audio: HTMLAudioElement) {
+        this.stopMusic();
+        audio.loop = true;
+        audio.pause();
+        this.currentMusic = audio;
+    }
+}
+
 class GameController {
     game: Game;
+    jukebox: Jukebox;
     levels: LevelDefinition[];
     finalCutscene: SceneDefinition[];
 
     constructor(
         game: Game,
+        jukebox: Jukebox,
         levels: LevelDefinition[],
         finalCutscene: SceneDefinition[]
     ) {
         this.game = game;
+        this.jukebox = jukebox;
         this.levels = levels;
         this.finalCutscene = finalCutscene;
     }
@@ -157,6 +191,8 @@ class GameController {
     async playGame() {
         this.game.run(10);
         while (true) {
+            const audio = await loadAudio("music/title.mp3");
+            this.jukebox.playMusic(audio);
             await this.playSplash("img/title.png");
             for (const level of this.levels) {
                 await this.playCutscene(level.introCutscene);
@@ -253,7 +289,7 @@ function main() {
     document.body.appendChild(canvas);
 
     const game = new Game(canvas);
-    const controller = new GameController(game, LEVELS, TEST_CUTSCENE);
+    const controller = new GameController(game, new Jukebox(), LEVELS, TEST_CUTSCENE);
 
     controller.playGame();
 }
