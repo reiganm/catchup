@@ -85,6 +85,7 @@ export class ShooterObject {
         this.spawner.spawn(
             new Explosion(this.x, this.y, this.localBBox)
         );
+        this.noisemaker.playExplosionSound();
         this.destroy();
     }
 }

@@ -215,6 +215,7 @@ class GameController {
                     const background = await loadImage(level.shooterBackgroundSrc);
                     const music = await loadAudio(level.musicSrc);
                     const shotSound = await loadAudio("snd/shot.wav");
+                    const explosionSound = await loadAudio("snd/explosion.wav");
                     this.jukebox.playMusic(music);
                     const jukebox = this.jukebox; 
                     const result = await this.playLevel({
@@ -230,7 +231,9 @@ class GameController {
                                 shotSound.play();
                             },
                             playExplosionSound() {
-                                // TODO: play explosion sound
+                                explosionSound.pause();
+                                explosionSound.currentTime = 0;
+                                explosionSound.play();
                             }
                         }
                     }); 
