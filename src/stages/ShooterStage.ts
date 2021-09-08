@@ -45,6 +45,7 @@ export class ShooterStage extends Stage {
     boss: Boss;
     bossMaxHP: number;
     bossName: string;
+    bossEndTimer: Timer;
     lives: number;
     isGameOver: boolean;
     objects: ShooterObject[];
@@ -69,6 +70,10 @@ export class ShooterStage extends Stage {
         this.boss = null;
         this.bossMaxHP = 0;
         this.bossName = "Mr. X";
+        this.bossEndTimer = new Timer("once", 2000, () => {
+            this.onStageComplete("victory");
+        });
+        this.bossEndTimer.isSleeping = true;
         this.lives = config.lives;
         this.isGameOver = false;
         this.objects = [];
@@ -120,7 +125,7 @@ export class ShooterStage extends Stage {
         const stage = this;
         return {
             completeLevel() {
-                stage.onStageComplete("victory");
+                stage.bossEndTimer.isSleeping = false;
             },
             startBossBattle(boss: Boss, name: string) {
                 stage.boss = boss;   
@@ -195,6 +200,7 @@ export class ShooterStage extends Stage {
 
     update(dt: number) {
         this.backgroundScrollTimer.update(dt);
+        this.bossEndTimer.update(dt);
         this.enemyScript.update(dt);
         this.playerRespawnTimer.update(dt);
 
