@@ -362,6 +362,12 @@ export class ShooterStage extends Stage {
                     this.player.stopShooting();
                 }
                 break;
+            case "±":
+                this.onStageComplete("victory");
+                break;
+            case "}":
+                this.lives += 1;
+                break;
         }
     }
 }

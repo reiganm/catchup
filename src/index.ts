@@ -15,71 +15,7 @@ import { Stage } from "./engine/Stage";
 import { LoadingStage } from "./stages/LoadingStage";
 import { ImageLibrary } from "./ImageLibrary";
 import { LevelDefinition, FINAL_CUTSCENE, LEVELS } from "./levels";
-
-const CREDITS: string[] = [
-    `CAT-CHING IS A CAT THING`,
-    ``,
-    ``,
-    `Written and Directed by`,
-    `Maria Reigan`,
-    ``,
-    ``,
-    `Music`,
-    ``,
-    `Title Screen theme`,
-    `"Street Life :Crusaders"`,
-    `by`,
-    `lasombra`,
-    ``,
-    `Level 1 theme`,
-    `"No Jazz"`,
-    `by`,
-    `asikwus`,
-    ``,
-    `Level 2 theme`,
-    `"Satisfaccion"`,
-    `by`,
-    `K. Jose`,
-    ``,
-    `Level 3 theme`,
-    `"The ARYX Experience"`,
-    `by`,
-    `Katie Cadet`,
-    ``,
-    `Boss Battle theme`,
-    `"Go emergency"`,
-    `by`,
-    `The GMC`,
-    ``,
-    `Boss Battle theme`,
-    `"Additional Discomfort"`,
-    `by`,
-    `Pip Malt`,
-    ``,
-    `Ending theme`,
-    `"Mr Pat's Cat"`,
-    `by`,
-    `lemonade`,
-    ``,
-    ``,
-    `Tomato Valac designed by`,
-    `Mishuy from pngtree.com`,
-    ``,
-    ``,
-    `This silly little game was`,
-    `developed in September of 2021`,
-    `for Narrative Driven Jam #4`,
-    ``,
-    ``,
-    ``,
-    ``,
-    ``,
-    ``,
-    ``,
-    ``,
-    `Thank you for playing!`,
-]
-
+import { CreditsStage } from "./stages/CreditsStage";
 const SCREEN_DIMENSIONS = new Vector(400, 300);
 
 Object.defineProperty(window, "CATMODE", { get() {
@@ -192,14 +128,23 @@ class GameController {
             });
     }
 
+    async playCredits() {
+        return new Promise((resolve) => {
+            const credits = new CreditsStage(
+                SCREEN_DIMENSIONS
+            );
+            this.fadeInto(credits, 200);
+        });
+    }
+
     async playGame() {
         this.game.run(10);
         while (true) {
             await this.playSplash("img/quote.png");
             await this.showLoadingScreen();
             await ImageLibrary.instance.loadImages();
-            const audio = await loadAudio("music/title.mp3");
-            this.jukebox.playMusic(audio);
+            const titleMusic = await loadAudio("music/title.mp3");
+            this.jukebox.playMusic(titleMusic);
             await this.playSplash("img/title.png");
             for (const level of this.levels) {
                 await this.showLoadingScreen();
@@ -247,6 +192,8 @@ class GameController {
             const endingMusic = await loadAudio("music/ending.mp3");
             this.jukebox.playMusic(endingMusic);
             await this.playCutscene(this.finalCutscene);
+            this.jukebox.playMusic(titleMusic);
+            await this.playCredits();
         }
     }
 }
