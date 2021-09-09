@@ -301,4 +301,22 @@ export const LEVELS: LevelDefinition[] = [{
         ":wait_1000",
         ":boss_valac",
     ],
-}].slice(1);
+}, {
+    introCutscene: TEST_CUTSCENE,
+    musicSrc: "music/level3.mp3",
+    bossMusicSrc: "music/finalboss.mp3",
+    shooterBackgroundSrc: "img/bathroom.png",
+    levelConfig: {
+        cameraHeight: 0,
+        cameraCenter: 200,
+        closeness: 33,
+        ceilHeight: 120,
+        totalHeight: 330,
+        ambientBrightness: 0.0,
+    },
+    enemyScript: ([
+        "aaa",
+        ":wait_2000",
+        ":boss_haborym",
+    ]),
+}].slice(2);
