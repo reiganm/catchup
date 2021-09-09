@@ -3,11 +3,12 @@ import { BBox } from "../../util/BBox";
 import { Vector } from "../../util/Vector";
 import { ShooterObject } from "./ShooterObject";
 import { Bullet } from "./Bullet";
-import { elt } from "../../util/elt";
 import { ImageLibrary } from "../../ImageLibrary";
+import { Timer } from "../../util/Timer";
 
 export class GoliathShip extends Gunner {
     image: HTMLImageElement;
+    shootWindowTimer: Timer;
 
     constructor(x: number, y: number) {
         super(x, y, new BBox(
@@ -15,7 +16,7 @@ export class GoliathShip extends Gunner {
         ), {
             bulletAllegiance: "enemy",
             shotsPerSecond: 4,
-            shouldRandomizeShootingTimer: true,
+            shouldRandomizeShootingTimer: false,
             canShootWhenTooFarLeft: false,
         });
 
@@ -26,10 +27,17 @@ export class GoliathShip extends Gunner {
         this.targetCollisionGroup = "player";
 
         this.image = ImageLibrary.instance.goliath;
+        this.shootWindowTimer = new Timer("repeat", 3600, () => {});
     }
 
     update(dt: number) {
         super.update(dt);
+        this.shootWindowTimer.update(dt);
+        if (this.shootWindowTimer.progress >= 0.5) {
+            this.stopShooting();
+        } else {
+            this.startShooting();
+        }
     }
 
     collideWithObject(player: ShooterObject) {
