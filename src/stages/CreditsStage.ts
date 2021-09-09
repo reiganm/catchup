@@ -39,7 +39,7 @@ const CREDITS: string[] = [
     `by`,
     `The GMC`,
     ``,
-    `Boss Battle theme`,
+    `Final Boss Battle theme`,
     `"Additional Discomfort"`,
     `by`,
     `Pip Malt`,
