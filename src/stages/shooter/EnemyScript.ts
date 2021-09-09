@@ -11,37 +11,6 @@ import { HaborymBoss } from "./HaborymBoss";
 import { FloatingHead } from "./FloatingHead";
 import { Answer } from "./Answer";
 
-export const sampleEnemyScript = [
-    "a-b-a",
-    ":question_Meow, Tom, is your girlfriend coming?_ummm_Y-yeah! Any moment now...",
-    ":wait_1000",
-    "a-b-a",
-    ":wait_1000",
-    ":question_Est dva stula_vozmu piki tochenu_prosnus",
-    ":wait_1000",
-    ":boss_amy",
-    "-c-c-c",
-    ":wait_1000",
-    "c-c-c-",
-    "-a----",
-    "-a----",
-    "-a----",
-    ":wait_500",
-    "-b-b-",
-    "-b--b-",
-    "-b---b-",
-    ":wait_500",
-    "----a-",
-    "----a-",
-    "----a-",
-    ":wait_500",
-    "a----a",
-    "-a--a-",
-    "--aa--",
-    "-a--a-",
-    "a----a",
-    ":wait_1000",
-];
 
 const DEFAULT_THRESHOLD = 250;
 
@@ -74,7 +43,12 @@ export class EnemyScript {
         this.gameChanger = gameChanger;
         this.counter = 0;
         this.threshold = DEFAULT_THRESHOLD;
-        this.instructionPointer = 0;
+        const startIndex = instructions.indexOf("#start");
+        if (startIndex < 0) {
+            this.instructionPointer = 0
+        } else {
+            this.instructionPointer = startIndex;
+        }
         this.instructions = instructions;
         this.screenDimensions = screenDimensions;
         this.mode = "normal";
@@ -82,9 +56,7 @@ export class EnemyScript {
 
     update(dt: number) {
         if (this.instructionPointer >= this.instructions.length) {
-            // TODO: don't leave it like that, it should actually end somewhere...
-            this.instructionPointer = 0;
-            // return;
+            return;
         }
 
         if (this.mode === "halt") {
@@ -119,6 +91,7 @@ export class EnemyScript {
                 const head = new FloatingHead(
                     this.screenDimensions.x + 90,
                     this.screenDimensions.y / 2,
+                    (question === "...") ? "tomato" : "cat",
                     () => {
                         this.gameChanger.showQuestion(question);
                         const answer1 = new Answer(head.x, head.y - 100, answerText1);
@@ -190,6 +163,8 @@ export class EnemyScript {
         if (instruction.startsWith(":")) {
             const [name, ...args] = instruction.slice(1).split("_");
             this.executeCommand(name, args);
+        } else if (instruction.startsWith("#")) {
+            return;
         } else {
             this.spawnEnemies(instruction);
             this.threshold = DEFAULT_THRESHOLD;

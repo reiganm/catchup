@@ -4,19 +4,17 @@ import { SplashScreenStage } from "./stages/SplashScreenStage";
 import { 
     ShooterStage,
     ShooterStageConfig,
-    ShooterStageCompleteResult,
-    LevelConfig
+    ShooterStageCompleteResult
 } from "./stages/ShooterStage";
 import { CutsceneStage, SceneDefinition } from "./stages/CutsceneStage";
 import { FadeTransition } from "./transitions/FadeTransition";
 import { Vector } from "./util/Vector";
 import { loadImage } from "./util/loadImage";
-import { sampleEnemyScript } from "./stages/shooter/EnemyScript";
 import { enableInvincibilityCheat } from "./stages/ShooterStage";
 import { Stage } from "./engine/Stage";
-import { Transition } from "./engine/Transition";
 import { LoadingStage } from "./stages/LoadingStage";
 import { ImageLibrary } from "./ImageLibrary";
+import { LevelDefinition, FINAL_CUTSCENE, LEVELS } from "./levels";
 
 const CREDITS: string[] = [
     `CAT-CHING IS A CAT THING`,
@@ -95,15 +93,6 @@ function loadAudio(src: string): Promise<HTMLAudioElement> {
         audio.addEventListener("canplaythrough", () => resolve(audio));
     });
 }
-
-type LevelDefinition = {
-    shooterBackgroundSrc: string
-    levelConfig: LevelConfig
-    introCutscene: SceneDefinition[]
-    enemyScript: string[]
-    musicSrc: string
-    bossMusicSrc: string
-};
 
 class Jukebox {
     currentMusic: HTMLAudioElement;
@@ -261,67 +250,6 @@ class GameController {
         }
     }
 }
-
-const TEST_CUTSCENE: SceneDefinition[] = [{
-    imageSrc: "img/test-scene-1.png",
-    dialogues: [
-        "meow meow meow",
-    ]
-}];
-
-const FINAL_CUTSCENE: SceneDefinition[] = [{
-    imageSrc: "img/test-scene-2.png",
-    dialogues: [
-        `In a moment of inexplicable rage, detective Tom Catchup suddenly pounces at the suspect tomato and smashes it!`,
-        `"Oh no!" Tom exclaims as he sees the deadly injured vegetable. "This is probably very illegal."`,
-        `"As a police officer, I'm not supposed to smash suspects with my mighty paw. I truly have turned into a Tomato Hating Monster."`,
-    ],
-}, {
-    imageSrc: "img/test-scene-1.png",
-    dialogues: [
-        `NEWSFLASH: Interrogator kills a tomato incident suspect! Investigation suggests personal motives.`,
-        `Five baby tomatoes end up in orphanage!`,
-        `Protesters demand stricter mental check-ups for police officers!`,
-    ],
-}, {
-    imageSrc: "img/test-scene-2.png",
-    dialogues: [
-        `Today former cat detective Tom Catchup serves a life sentence for the first degree murder.`,
-        `"I don't regret anything! I hate tomatoes! Screw tomatoes!"`,
-        `What a horrible person! Thanks to you, he's got what he deserved.`,
-        `                    THE END`,
-    ],
-}];
-
-const LEVELS: LevelDefinition[] = [{
-    introCutscene: TEST_CUTSCENE,
-    musicSrc: "music/level1.mp3",
-    bossMusicSrc: "music/boss.mp3",
-    shooterBackgroundSrc: "img/test-scene-1.png",
-    levelConfig: {
-        cameraHeight: 20,
-        cameraCenter: 200,
-        closeness: 10,
-        ceilHeight: 90,
-        totalHeight: 300,
-        ambientBrightness: 0.2,
-    },
-    enemyScript: sampleEnemyScript
-}, {
-    introCutscene: TEST_CUTSCENE,
-    musicSrc: "music/level2.mp3",
-    bossMusicSrc: "music/boss.mp3",
-    shooterBackgroundSrc: "img/bathroom.png",
-    levelConfig: {
-        cameraHeight: 20,
-        cameraCenter: 200,
-        closeness: 10,
-        ceilHeight: 90,
-        totalHeight: 300,
-        ambientBrightness: 0.2,
-    },
-    enemyScript: sampleEnemyScript
-}];
 
 function main() {
     const canvas = elt.canvas(SCREEN_DIMENSIONS.x, SCREEN_DIMENSIONS.y);
