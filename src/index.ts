@@ -128,10 +128,11 @@ class GameController {
             });
     }
 
-    async playCredits() {
+    async playCredits(): Promise<void> {
         return new Promise((resolve) => {
             const credits = new CreditsStage(
-                SCREEN_DIMENSIONS
+                SCREEN_DIMENSIONS,
+                resolve
             );
             this.fadeInto(credits, 200);
         });

@@ -1,3 +1,4 @@
+import { GameInputEvent } from "../engine/GameInputEvent";
 import { Stage } from "../engine/Stage";
 import { Vector } from "../util/Vector";
 
@@ -8,7 +9,7 @@ const CREDITS: string[] = [
     `CAT-CHING IS A CAT THING`,
     ``,
     ``,
-    `Story, code, and artwork by`,
+    `Story, code, SFX, and artwork by`,
     `Maria Reigan`,
     ``,
     ``,
@@ -70,11 +71,15 @@ const CREDITS: string[] = [
 
 export class CreditsStage extends Stage {
     scrollProgress: number;
+    canSkip: boolean;
+    onSkip: () => void;
 
-    constructor(screenDimensions: Vector) {
+    constructor(screenDimensions: Vector, onSkip: () => void) {
         super(screenDimensions);
 
         this.scrollProgress = -320;
+        this.canSkip = false;
+        this.onSkip = onSkip;
     }
 
     update(dt: number) {
@@ -82,6 +87,7 @@ export class CreditsStage extends Stage {
             (CREDITS.length * LINE_HEIGHT - this.scrollProgress)
             <= this.screenDimensions.y / 2
         ) {
+            this.canSkip = true;
             return;
         }
         this.scrollProgress += SCROLL_SPEED * dt / 1000;
@@ -107,5 +113,11 @@ export class CreditsStage extends Stage {
         }
 
         context.textAlign = "left";
+    }
+
+    input() {
+        if (this.canSkip) {
+            this.onSkip();
+        }
     }
 }
