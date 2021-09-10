@@ -85,14 +85,14 @@ export const LEVELS: LevelDefinition[] = [{
     introCutscene: TEST_CUTSCENE,
     musicSrc: "music/level1.mp3",
     bossMusicSrc: "music/boss.mp3",
-    shooterBackgroundSrc: "img/test-scene-1.png",
+    shooterBackgroundSrc: "img/level1.png",
     levelConfig: {
         cameraHeight: 20,
         cameraCenter: 200,
         closeness: 10,
         ceilHeight: 90,
         totalHeight: 300,
-        ambientBrightness: 0.2,
+        ambientBrightness: 0.3,
     },
     enemyScript: ([
         ":wait_1800",
