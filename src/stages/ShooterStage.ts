@@ -264,7 +264,7 @@ export class ShooterStage extends Stage {
 
         context.fillStyle = "white";
         context.font = "8px amiga4ever"
-        context.fillText(`Lives: ${this.lives} | ${this.player.directionSymbol.padEnd(2, "_")} | ${this.objects.length}`, 5, 12);
+        context.fillText(`Lives: ${this.lives}`, 5, 12);
 
         if (this.isGameOver) {
             context.textAlign = "center";

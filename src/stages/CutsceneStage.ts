@@ -129,6 +129,9 @@ export class CutsceneStage extends Stage {
 
             this.enableFastText();
         }
+        if (event.key === "±") {
+            this.onCutsceneFinished();
+        }
 
         if (event.key === " " && event.state === "up") {
             this.disableFastText();

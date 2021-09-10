@@ -1,6 +1,6 @@
-import { GameInputEvent } from "../engine/GameInputEvent";
 import { Stage } from "../engine/Stage";
 import { Vector } from "../util/Vector";
+import { ImageLibrary } from "../ImageLibrary";
 
 const LINE_HEIGHT = 15;
 const SCROLL_SPEED = 25;
@@ -13,9 +13,13 @@ const CREDITS: string[] = [
     `Maria Reigan`,
     ``,
     ``,
+    `Character Design & Credits Artwork by`,
+    `SwitchSugar`,
+    ``,
+    ``,
     `Music`,
     ``,
-    `Title Screen & Credits theme`,
+    `Title Screen theme`,
     `"Street Life :Crusaders"`,
     `by`,
     `lasombra`,
@@ -70,6 +74,7 @@ const CREDITS: string[] = [
 ];
 
 export class CreditsStage extends Stage {
+    image: HTMLImageElement;
     scrollProgress: number;
     canSkip: boolean;
     onSkip: () => void;
@@ -77,6 +82,7 @@ export class CreditsStage extends Stage {
     constructor(screenDimensions: Vector, onSkip: () => void) {
         super(screenDimensions);
 
+        this.image = ImageLibrary.instance.credits;
         this.scrollProgress = -320;
         this.canSkip = false;
         this.onSkip = onSkip;
@@ -94,8 +100,7 @@ export class CreditsStage extends Stage {
     }
 
     render(context: CanvasRenderingContext2D) {
-        context.fillStyle = "black";
-        context.fillRect(0, 0, this.screenDimensions.x, this.screenDimensions.y);
+        context.drawImage(this.image, 0, 0);
 
         context.fillStyle = "white";
         context.textAlign = "center";

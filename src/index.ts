@@ -14,7 +14,7 @@ import { enableInvincibilityCheat } from "./stages/ShooterStage";
 import { Stage } from "./engine/Stage";
 import { LoadingStage } from "./stages/LoadingStage";
 import { ImageLibrary } from "./ImageLibrary";
-import { LevelDefinition, FINAL_CUTSCENE, LEVELS } from "./levels";
+import { LevelDefinition, FINAL_CUTSCENE, LEVELS, FINAL_FINAL_CUTSCENE } from "./levels";
 import { CreditsStage } from "./stages/CreditsStage";
 const SCREEN_DIMENSIONS = new Vector(400, 300);
 
@@ -189,10 +189,12 @@ class GameController {
                     }
                 }
             }
-            await this.showLoadingScreen();
-            const endingMusic = await loadAudio("music/ending.mp3");
-            this.jukebox.playMusic(endingMusic);
+            this.showLoadingScreen();
+            this.jukebox.stopMusic();
+            const sillyMusic = await loadAudio("music/ending.mp3");
             await this.playCutscene(this.finalCutscene);
+            this.jukebox.playMusic(sillyMusic);
+            await this.playCutscene(FINAL_FINAL_CUTSCENE);
             this.jukebox.playMusic(titleMusic);
             await this.playCredits();
         }

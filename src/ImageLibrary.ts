@@ -11,6 +11,7 @@ export class ImageLibrary {
     cat: HTMLImageElement;
     returner: HTMLImageElement;
     waver: HTMLImageElement;
+    credits: HTMLImageElement;
 
     async loadImages() {
         this.prompt = await loadImage("img/prompt.png");
@@ -23,6 +24,7 @@ export class ImageLibrary {
         this.cat = await loadImage("img/cat.png");
         this.returner = await loadImage("img/returner.png");
         this.waver = await loadImage("img/waver.png");
+        this.credits = await loadImage("img/credits.png"); 
     }
 
     static get instance(): ImageLibrary {
