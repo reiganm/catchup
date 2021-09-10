@@ -448,4 +448,4 @@ export const LEVELS: LevelDefinition[] = [{
         ":wait_8000",
         ":boss_haborym"
     ]),
-}].slice(2);
+}];
