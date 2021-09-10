@@ -214,7 +214,7 @@ export const LEVELS: LevelDefinition[] = [{
     introCutscene: TEST_CUTSCENE,
     musicSrc: "music/level2.mp3",
     bossMusicSrc: "music/boss.mp3",
-    shooterBackgroundSrc: "img/shop.jpg",
+    shooterBackgroundSrc: "img/level2.png",
     levelConfig: {
         cameraHeight: -20,
         cameraCenter: 100,
